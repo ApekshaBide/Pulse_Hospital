@@ -17,7 +17,7 @@ export const navData = [
     icon: <Iconify width={22} icon="solar:atom-bold-duotone" />,
   },
   {
-    title: 'Shop',
+    title: 'Doctors',
     path: paths.product.root,
     icon: <Iconify width={22} icon="solar:atom-bold-duotone" />,
   },

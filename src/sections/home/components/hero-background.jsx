@@ -11,7 +11,7 @@ import { varAlpha, stylesMode } from 'src/theme/styles';
 
 import { MotionContainer } from 'src/components/animate';
 
-import { Dots, Lines, Texts, Circles, PlusIcon } from './hero-svg';
+import { Dots, Lines, Circles, PlusIcon } from './hero-svg';
 
 // ----------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ export function HeroBackground({ sx }) {
     >
       <Dots />
 
-      {upMd && <Texts />}
+      {/* {upMd && <Texts />} */}
 
       <Box
         component={m.svg}
