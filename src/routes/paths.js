@@ -40,6 +40,9 @@ export const paths = {
     details: (id) => `/product/${id}`,
     demo: { details: `/product/${MOCK_ID}` },
   },
+  service: {
+    root: `/service`,
+  },
   post: {
     root: `/post`,
     details: (title) => `/post/${paramCase(title)}`,

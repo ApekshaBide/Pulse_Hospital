@@ -3,6 +3,7 @@ import {
   Grid,
   Card,
   Link,
+  Stack,
   Container,
   Typography,
   CardContent,
@@ -14,6 +15,9 @@ import { RouterLink } from 'src/routes/components';
 import { CONFIG } from 'src/config-global';
 
 import { SvgColor } from 'src/components/svg-color';
+import { varFade, MotionViewport } from 'src/components/animate';
+
+import { CircleSvg, FloatLine, FloatPlusIcon } from './svg-elements';
 
 const services = [
   {
@@ -39,10 +43,23 @@ const services = [
   },
 ];
 
-export function ServicesSection() {
-  return (
-    <Container sx={{ pt: 32, pb: 8 }}>
-      <Grid container spacing={4}>
+// ----------------------------------------------------------------------
+
+export function ServicesSection({ sx, ...other }) {
+  const renderLines = (
+    <>
+      <FloatPlusIcon sx={{ top: 72, left: 72 }} />
+      <FloatPlusIcon sx={{ bottom: 72, left: 72 }} />
+      <FloatLine sx={{ top: 80, left: 0 }} />
+      <FloatLine sx={{ bottom: 80, left: 0 }} />
+      <FloatLine vertical sx={{ top: 0, left: 80 }} />
+    </>
+  );
+
+  const renderDescription = (
+    <>
+      <Typography />
+      <Grid sx={{ ml: 1 }} container spacing={4}>
         {services.map((svc) => (
           <Grid key={svc.title} item xs={12} sm={6} md={4}>
             <Card
@@ -89,6 +106,50 @@ export function ServicesSection() {
           </Grid>
         ))}
       </Grid>
-    </Container>
+    </>
+  );
+
+  return (
+    <Stack
+      component="section"
+      sx={{
+        overflow: 'hidden',
+        position: 'relative',
+        py: { xs: 10, md: 20 },
+        ...sx,
+      }}
+      {...other}
+    >
+      <MotionViewport>
+        {renderLines}
+
+        <Container sx={{ position: 'relative' }}>
+          <Grid container columnSpacing={{ xs: 0, md: 8 }} sx={{ position: 'relative', zIndex: 9 }}>
+            <Grid>{renderDescription}</Grid>
+          </Grid>
+          <CircleSvg variants={varFade().in} sx={{ display: { xs: 'none', md: 'block' } }} />
+        </Container>
+      </MotionViewport>
+    </Stack>
   );
 }
+
+// ----------------------------------------------------------------------
+
+const ITEMS = [
+  {
+    icon: `${CONFIG.site.basePath}/assets/icons/home/ic-make-brand.svg`,
+    title: 'Branding',
+    description: 'Consistent design makes it easy to brand your own.',
+  },
+  {
+    icon: `${CONFIG.site.basePath}/assets/icons/home/ic-design.svg`,
+    title: 'UI & UX design',
+    description: 'The kit is built on the principles of the atomic design system.',
+  },
+  {
+    icon: `${CONFIG.site.basePath}/assets/icons/home/ic-development.svg`,
+    title: 'Development',
+    description: 'Easy to customize and extend, saving you time and money.',
+  },
+];

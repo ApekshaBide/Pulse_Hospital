@@ -7,10 +7,10 @@ import Typography from '@mui/material/Typography';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 import { useTheme, useColorScheme } from '@mui/material/styles';
 
-import COLORS from 'src/theme/core/colors.json';
+// import COLORS from 'src/theme/core/colors.json';
 import { paper, varAlpha } from 'src/theme/styles';
 import { defaultFont } from 'src/theme/core/typography';
-import PRIMARY_COLOR from 'src/theme/with-settings/primary-color.json';
+// import PRIMARY_COLOR from 'src/theme/with-settings/primary-color.json';
 
 import { Iconify } from '../../iconify';
 import { BaseOption } from './base-option';
@@ -18,7 +18,7 @@ import { NavOptions } from './nav-options';
 import { Scrollbar } from '../../scrollbar';
 import { FontOptions } from './font-options';
 import { useSettingsContext } from '../context';
-import { PresetsOptions } from './presets-options';
+// import { PresetsOptions } from './presets-options';
 import { defaultSettings } from '../config-settings';
 import { FullScreenButton } from './fullscreen-button';
 
@@ -114,20 +114,20 @@ export function SettingsDrawer({
     />
   );
 
-  const renderPresets = (
-    <PresetsOptions
-      value={settings.primaryColor}
-      onClickOption={(newValue) => settings.onUpdateField('primaryColor', newValue)}
-      options={[
-        { name: 'default', value: COLORS.primary.main },
-        { name: 'cyan', value: PRIMARY_COLOR.cyan.main },
-        { name: 'purple', value: PRIMARY_COLOR.purple.main },
-        { name: 'blue', value: PRIMARY_COLOR.blue.main },
-        { name: 'orange', value: PRIMARY_COLOR.orange.main },
-        { name: 'red', value: PRIMARY_COLOR.red.main },
-      ]}
-    />
-  );
+  // const renderPresets = (
+  //   <PresetsOptions
+  //     value={settings.primaryColor}
+  //     onClickOption={(newValue) => settings.onUpdateField('primaryColor', newValue)}
+  //     options={[
+  //       { name: 'blue', value: COLORS.primary.main },
+  //       { name: 'cyan', value: PRIMARY_COLOR.cyan.main },
+  //       { name: 'purple', value: PRIMARY_COLOR.purple.main },
+  //       { name: 'default', value: PRIMARY_COLOR.blue.main },
+  //       { name: 'orange', value: PRIMARY_COLOR.orange.main },
+  //       { name: 'red', value: PRIMARY_COLOR.red.main },
+  //     ]}
+  //   />
+  // );
 
   const renderNav = (
     <NavOptions
@@ -184,7 +184,7 @@ export function SettingsDrawer({
             {!hideCompact && renderCompact}
           </Box>
           {!(hideNavLayout && hideNavColor) && renderNav}
-          {!hidePresets && renderPresets}
+          {/* {!hidePresets && renderPresets} */}
           {!hideFont && renderFont}
         </Stack>
       </Scrollbar>
