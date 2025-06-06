@@ -45,7 +45,7 @@ export const navData = [
    */
   {
     subheader: 'Overview',
-    items: [{ title: 'Dashboard', path: paths.dashboard.root, icon: ICONS.dashboard }],
+    items: [{ title: 'Dashboard', path: paths.dashboard.general.course, icon: ICONS.dashboard }],
   },
   /**
    * Management

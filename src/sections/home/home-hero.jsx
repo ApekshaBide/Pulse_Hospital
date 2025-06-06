@@ -123,7 +123,7 @@ export function HomeHero({ sx, ...other }) {
             />
           ))}
         </AvatarGroup>
-        160+ Happy customers
+        1200+ Happy customers
       </Box>
     </MInview>
   );

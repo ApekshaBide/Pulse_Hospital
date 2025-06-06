@@ -151,16 +151,20 @@ export function HomeTestimonials({ sx, ...other }) {
 
       <Stack spacing={5} direction={{ xs: 'column', md: 'row' }} divider={verticalDivider}>
         {[
-          { label: 'Purchased order', value: 12.121 },
-          { label: 'Happy customers', value: 160 },
-          { label: 'Review rate', value: 4.9 },
+          { label: 'Recovered Patients', value: 1200 },
+          { label: 'Expert Doctors', value: 10 },
+          { label: 'Satisfaction rate', value: 90 },
         ].map((item) => (
           <Stack key={item.label} spacing={2} sx={{ textAlign: 'center', width: 1 }}>
             <m.div variants={varFade({ distance: 24 }).inUp}>
               <AnimateCountUp
                 to={item.value}
-                unit={item.label === 'Purchased order' ? 'k+' : '+'}
-                toFixed={item.label === 'Happy customers' ? 0 : 1}
+                unit={
+                  item.label === 'Recovered Patients' || item.label === 'Expert Doctors' ? '+' : '%'
+                }
+                toFixed={
+                  item.label === 'Recovered Patients' || item.label === 'Expert Doctors' ? 0 : 1
+                }
                 sx={{
                   fontWeight: 'fontWeightBold',
                   fontSize: { xs: 40, md: 64 },

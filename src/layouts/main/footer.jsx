@@ -20,7 +20,7 @@ import { SocialIcon } from 'src/components/iconify';
 
 const LINKS = [
   {
-    headline: 'Minimal',
+    headline: 'Quick Links',
     children: [
       { name: 'About us', href: paths.about },
       { name: 'Contact us', href: paths.contact },
@@ -33,7 +33,13 @@ const LINKS = [
       { name: 'Privacy policy', href: '#' },
     ],
   },
-  { headline: 'Contact', children: [{ name: 'support@minimals.cc', href: '#' }] },
+  {
+    headline: 'Contact',
+    children: [
+      { name: 'pulseicutpa@gmail.com', href: '#' },
+      { name: '+91 88053 31414', href: '#' },
+    ],
+  },
 ];
 
 // ----------------------------------------------------------------------
@@ -72,8 +78,7 @@ export function Footer({ layoutQuery, sx }) {
                 [theme.breakpoints.up(layoutQuery)]: { mx: 'unset' },
               }}
             >
-              The starting point for your next project with Minimal UI Kit, built on the newest
-              version of Material-UI ©, ready to be customized to your style.
+              Your health journey begins here trusted, affordable, exceptional care.
             </Typography>
 
             <Stack

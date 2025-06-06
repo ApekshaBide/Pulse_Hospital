@@ -23,11 +23,13 @@ import { FloatLine, FloatPlusIcon, FloatTriangleDownIcon } from './svg-elements'
 
 const FAQs = [
   {
-    question: 'What specialty treatments are available at Jupiter Multispeciality Hospital?',
+    question: 'What specialty treatments are available at Pulse Hospital?',
     answer: (
       <Typography>
-        We offer over 30 specialty departments—from Cardiology, Neurology, and Oncology to
-        Orthopaedics, Gastroenterology, and beyond—each staffed by experienced specialists.
+        At Pulse Hospital, we offer a wide range of specialty departments—Diagnostics (3T MRI, CT
+        Scan), Orthopaedics, General Surgery, Urology, Obstetrics & Gynaecology, Cardiology, and
+        Emergency Care—each staffed by experienced specialists committed to quality and
+        compassionate care.
       </Typography>
     ),
   },
@@ -35,20 +37,21 @@ const FAQs = [
     question: 'How can I schedule an appointment with a specialist?',
     answer: (
       <Typography>
-        You can book online via our “Book Appointment” form, call our 24/7 helpline at
-        <Link href="tel:+912345678900" sx={{ mx: 0.5 }}>
-          +91 23456 78900
+        You can book online via our “Book Appointment” form on the website, call our 24/7 helpline
+        at{' '}
+        <Link href="tel:+919021023456" sx={{ mx: 0.5 }}>
+          +91 90210 23456
         </Link>
-        , or visit our reception desk—no referral required.
+        , or visit our reception desk at the Tathawade campus—no referral required.
       </Typography>
     ),
   },
   {
-    question: 'Does Jupiter Multispeciality Hospital offer 24/7 emergency services?',
+    question: 'Does Pulse Hospital offer 24/7 emergency services?',
     answer: (
       <Typography>
-        Absolutely. Our Emergency & Trauma Centre is open 24×7, fully equipped for cardiac, neuro,
-        polytrauma and more—staffed by on-call specialists around the clock.
+        Absolutely. Our Emergency & Trauma Centre at Pulse Hospital is open 24×7, fully equipped for
+        cardiac, trauma, and critical care—staffed by on-call specialists around the clock.
       </Typography>
     ),
   },
@@ -57,8 +60,8 @@ const FAQs = [
     answer: (
       <Box component="ul" sx={{ pl: 3, listStyleType: 'disc' }}>
         <li>All major public and private insurers</li>
-        <li>Cashless claims with network partners</li>
-        <li>TPA support on-site for quick approvals</li>
+        <li>Cashless claims with our network partners</li>
+        <li>On-site TPA support for quick approvals</li>
       </Box>
     ),
   },
@@ -66,8 +69,9 @@ const FAQs = [
     question: 'How can I access my medical reports online?',
     answer: (
       <Typography>
-        Once your tests are complete, your digital reports appear in our Patient Portal within 24
-        hours. You’ll receive an SMS/email with login instructions.
+        Once your tests (e.g., MRI, CT, blood work) are complete, you’ll receive an SMS/email with
+        login instructions. Your digital reports appear in our Patient Portal within 24 hours of
+        test completion.
       </Typography>
     ),
   },
@@ -75,8 +79,9 @@ const FAQs = [
     question: 'What COVID-19 safety measures are in place?',
     answer: (
       <Typography>
-        We enforce universal masking, temperature checks at entry, dedicated COVID screening zone,
-        enhanced sanitization, and social distancing throughout the campus.
+        We enforce universal masking, temperature checks at entry, a dedicated COVID-19 screening
+        zone, enhanced sanitization protocols, and social distancing throughout the Pulse Hospital
+        campus.
       </Typography>
     ),
   },
