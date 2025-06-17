@@ -23,6 +23,9 @@ const LINKS = [
     headline: 'Quick Links',
     children: [
       { name: 'About us', href: paths.about },
+      { name: 'Doctors', href: paths.doctors },
+      { name: 'Department', href: paths.department},
+      { name: 'Blog', href: paths.blog},
       { name: 'Contact us', href: paths.contact },
     ],
   },

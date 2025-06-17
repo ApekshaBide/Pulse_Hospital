@@ -7,22 +7,30 @@ import Typography from '@mui/material/Typography';
 
 export function ContactForm() {
   return (
-    <div>
-      <Typography variant="h3">
-        Feel free to contact us. <br />
-        We&apos;ll be glad to hear from you buddy.
+    <Box>
+      <Typography variant="h3" gutterBottom>
+        Make an Online Appoinemnt <br />
+        We&apos;Booking For Treatment Patients
       </Typography>
 
       <Box gap={3} display="flex" flexDirection="column" sx={{ my: 5 }}>
-        <TextField fullWidth label="Name" />
-        <TextField fullWidth label="Email" />
-        <TextField fullWidth label="Subject" />
-        <TextField fullWidth label="Enter your message here." multiline rows={4} />
-      </Box>
+  <TextField fullWidth label="Name" name="name" />
+  <TextField fullWidth label="Email" name="email" type="email" />
+  <TextField fullWidth label="Phone Number" name="phone" type="tel" />
+  <TextField fullWidth label="Subject" name="subject" />
+  <TextField
+    fullWidth
+    label="Enter your message here."
+    multiline
+    rows={4}
+    name="message"
+  />
+</Box>
 
-      <Button size="large" variant="contained">
+
+      <Button size="large" variant="contained" fullWidth>
         Submit
       </Button>
-    </div>
+    </Box>
   );
 }

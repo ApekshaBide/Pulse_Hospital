@@ -6,6 +6,7 @@ import { _mapContact } from 'src/_mock';
 import { ContactMap } from '../contact-map';
 import { ContactHero } from '../contact-hero';
 import { ContactForm } from '../contact-form';
+import { Contactservice } from '../contact-service';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +24,9 @@ export function ContactView() {
           <ContactForm />
 
           <ContactMap contacts={_mapContact} />
+
         </Box>
+        <Contactservice />
       </Container>
     </>
   );

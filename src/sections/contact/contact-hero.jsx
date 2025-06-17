@@ -5,25 +5,21 @@ import Container from '@mui/material/Container';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-import { CONFIG } from 'src/config-global';
+import contactHeroImg from 'src/assets/image1/img2.avif'; // ✅ Import image first
 import { varAlpha, bgGradient } from 'src/theme/styles';
 
-import { varFade, AnimateText, MotionContainer, animateTextClasses } from 'src/components/animate';
+import {
+  varFade,
+  AnimateText,
+  MotionContainer,
+  animateTextClasses,
+} from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
 const CONTACTS = [
-  { country: 'Bali', address: '508 Bridle Avenue Newnan, GA 30263', phoneNumber: '(239) 555-0108' },
-  {
-    country: 'London',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(319) 555-0115',
-  },
-  {
-    country: 'Prague',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(252) 555-0126',
-  },
+  { country: 'India', address: '508 Bridle Avenue Newnan, GA 30263', phoneNumber: '(239) 555-0108' },
+  { country: 'India', address: '508 Bridle Avenue Newnan, GA 30263', phoneNumber: '(252) 555-0126' },
   { country: 'Moscow', address: '508 Bridle', phoneNumber: '(307) 555-0133' },
 ];
 
@@ -37,7 +33,7 @@ export function ContactHero() {
       sx={{
         ...bgGradient({
           color: `0deg, ${varAlpha(theme.vars.palette.grey['900Channel'], 0.8)}, ${varAlpha(theme.vars.palette.grey['900Channel'], 0.8)}`,
-          imgUrl: `${CONFIG.site.basePath}/assets/images/contact/hero.webp`,
+          imgUrl: contactHeroImg, // ✅ use imported image here
         }),
         height: { md: 560 },
         py: { xs: 10, md: 0 },
@@ -56,7 +52,7 @@ export function ContactHero() {
           <AnimateText
             component="h1"
             variant="h1"
-            text={['Where', 'to find us?']}
+            text={['Contact', 'Us']}
             variants={varFade({ distance: 24 }).inUp}
             sx={{
               color: 'common.white',

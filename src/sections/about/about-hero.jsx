@@ -5,8 +5,14 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/config-global';
+import bgImage from 'src/assets/image1/img1.jpg';
 
-import { varFade, AnimateText, MotionContainer, animateTextClasses } from 'src/components/animate';
+import {
+  varFade,
+  AnimateText,
+  MotionContainer,
+  animateTextClasses,
+} from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +26,7 @@ export function AboutHero() {
         position: 'relative',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundImage: `url(${CONFIG.site.basePath}/assets/background/overlay.svg), url(${CONFIG.site.basePath}/assets/images/about/hero.webp)`,
+        backgroundImage: `url(${CONFIG.site.basePath}/assets/background/overlay.svg), url(${bgImage})`,
       }}
     >
       <Container component={MotionContainer}>
@@ -34,7 +40,7 @@ export function AboutHero() {
           <AnimateText
             component="h1"
             variant="h1"
-            text={['Who', 'we are?']}
+            text={['About','Us' ]}
             variants={varFade({ distance: 24 }).inRight}
             sx={{
               color: 'common.white',
@@ -49,8 +55,8 @@ export function AboutHero() {
               variant="h4"
               sx={{ mt: 3, color: 'common.white', fontWeight: 'fontWeightSemiBold' }}
             >
-              Let&apos;s work together and
-              <br /> make awesome site easily
+              Let&apos;s PULSE HOSPITAL/ ABOUT US
+              <br />
             </Typography>
           </m.div>
         </Box>

@@ -22,6 +22,9 @@ export const paths = {
   pricing: '/pricing',
   payment: '/payment',
   about: '/about-us',
+  doctors:'/doctors',
+  department:'department',
+  blog:'blog',
   contact: '/contact-us',
   faqs: '/faqs',
   page403: '/error/403',
@@ -101,9 +104,19 @@ export const paths = {
     chat: `${ROOTS.DASHBOARD}/chat`,
     blank: `${ROOTS.DASHBOARD}/blank`,
     kanban: `${ROOTS.DASHBOARD}/kanban`,
+    appointment: `${ROOTS.DASHBOARD}/appointment`,
     calendar: `${ROOTS.DASHBOARD}/calendar`,
     fileManager: `${ROOTS.DASHBOARD}/file-manager`,
     permission: `${ROOTS.DASHBOARD}/permission`,
+
+    appointmentSpecialties: {
+      cardiology: `${ROOTS.DASHBOARD}/appointment/cardiology`,
+      dermatology: `${ROOTS.DASHBOARD}/appointment/dermatology`,
+      neurology: `${ROOTS.DASHBOARD}/appointment/neurology`,
+      orthopedics: `${ROOTS.DASHBOARD}/appointment/orthopedics`,
+      ophthalmology: `${ROOTS.DASHBOARD}/appointment/ophthalmology`,
+      pediatrics: `${ROOTS.DASHBOARD}/appointment/pediatrics`,
+    },
     general: {
       app: `${ROOTS.DASHBOARD}/app`,
       ecommerce: `${ROOTS.DASHBOARD}/ecommerce`,
@@ -182,5 +195,10 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/tour/${MOCK_ID}/edit`,
       },
     },
+     website: {
+  root: `${ROOTS.DASHBOARD}/website`,
+  privacy_policy: `${ROOTS.DASHBOARD}/website/privacy_policy`,
+  terms_conditions: `${ROOTS.DASHBOARD}/website/terms_conditions`, // Keep this consistent
+},
   },
 };

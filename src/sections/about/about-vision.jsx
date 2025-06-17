@@ -1,107 +1,89 @@
 import { m } from 'framer-motion';
 
-import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/config-global';
-import { varAlpha } from 'src/theme/styles';
 
-import { Image } from 'src/components/image';
-import { Iconify } from 'src/components/iconify';
+import { SvgColor } from 'src/components/svg-color';
 import { varFade, MotionViewport } from 'src/components/animate';
 
-// ----------------------------------------------------------------------
+
+const items = [
+  {
+    icon: `${CONFIG.site.basePath}/assets/icons/home/ic-make-brand.svg`,
+    title: 'Our Mission',
+    description: 'Professional mission capital without enterprise medical users, value-added, enabling creative technology via team.',
+  },
+  {
+    icon: `${CONFIG.site.basePath}/assets/icons/home/ic-design.svg`,
+    title: 'Our Permission',
+    description: 'Professional mision capital without enterp medical users pros value added e-enable creative technology via team.',
+  },
+  {
+    icon: `${CONFIG.site.basePath}/assets/icons/home/ic-development.svg`,
+    title: 'Our Vision',
+    description: 'Professional mision capital without enterp medical users pros value added e-enable creative technology via team.',
+  },
+];
 
 export function AboutVision() {
-  const theme = useTheme();
-
-  const renderImg = (
-    <Image
-      src={`${CONFIG.site.basePath}/assets/images/about/vision.webp`}
-      alt="about-vision"
-      ratio={{ xs: '4/3', sm: '16/9' }}
-      slotProps={{
-        overlay: { background: varAlpha(theme.vars.palette.grey['900Channel'], 0.48) },
-      }}
-    />
-  );
-
-  const renderLogos = (
-    <Stack
-      direction="row"
-      flexWrap="wrap"
-      alignItems="center"
-      justifyContent="center"
-      sx={{
-        width: 1,
-        zIndex: 9,
-        bottom: 0,
-        opacity: 0.48,
-        position: 'absolute',
-        py: { xs: 1.5, md: 2.5 },
-      }}
-    >
-      {['ibm', 'lya', 'spotify', 'netflix', 'hbo', 'amazon'].map((logo) => (
-        <Box
-          component={m.img}
-          key={logo}
-          variants={varFade().in}
-          alt={logo}
-          src={`${CONFIG.site.basePath}/assets/icons/brands/ic-brand-${logo}.svg`}
-          sx={{ m: { xs: 1.5, md: 2.5 }, height: { xs: 20, md: 32 } }}
-        />
-      ))}
-    </Stack>
-  );
-
   return (
-    <Box
-      sx={{
-        pb: 10,
-        position: 'relative',
-        bgcolor: 'background.neutral',
-        '&::before': {
-          top: 0,
-          left: 0,
-          width: 1,
-          content: "''",
-          position: 'absolute',
-          height: { xs: 80, md: 120 },
-          bgcolor: 'background.default',
-        },
-      }}
-    >
+    <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: 'background.neutral' }}>
       <Container component={MotionViewport}>
-        <Box
-          sx={{
-            mb: 10,
-            borderRadius: 2,
-            display: 'flex',
-            overflow: 'hidden',
-            position: 'relative',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          {renderImg}
+        <Typography variant="h3" sx={{ mb: 6, textAlign: 'center' }}>
+          Our Mission, Permission & Vision
+        </Typography>
 
-          {renderLogos}
+        <Grid container spacing={4}>
+          {items.map((item, index) => (
+            <Grid key={item.title} item xs={12} sm={6} md={4}>
+              <m.div
+                variants={varFade().inUp}
+                whileHover={{
+                  scale: 1.05,
+                  rotate: [0, 2, -2, 0],
+                  transition: { duration: 0.5, type: 'spring' },
+                }}
+                transition={{ delay: index * 0.2, duration: 0.6 }}
+              >
+                <Box
+                  sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: { xs: 'column', sm: 'row', md: 'column' },
+                    alignItems: { sm: 'flex-start', md: 'center' },
+                    textAlign: { sm: 'left', md: 'center' },
+                    bgcolor: 'background.paper',
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    p: 3,
+                    transition: 'all 0.3s',
+                  }}
+                >
+                  <Box
+                    sx={{
+                      flexShrink: 0,
+                      mb: { xs: 2, sm: 0, md: 2 },
+                      mr: { sm: 2, md: 0 },
+                    }}
+                  >
+                    <SvgColor src={item.icon} sx={{ width: 48, height: 48 }} />
+                  </Box>
 
-          <Fab sx={{ position: 'absolute', zIndex: 9 }}>
-            <Iconify icon="solar:play-broken" width={24} />
-          </Fab>
-        </Box>
-
-        <m.div variants={varFade().inUp}>
-          <Typography variant="h3" sx={{ textAlign: 'center', maxWidth: 800, mx: 'auto' }}>
-            Our vision offering the best product nulla vehicula tortor scelerisque ultrices
-            malesuada.
-          </Typography>
-        </m.div>
+                  <Box>
+                    <Typography variant="h6" gutterBottom>
+                      {item.title}
+                    </Typography>
+                    <Typography variant="body2">{item.description}</Typography>
+                  </Box>
+                </Box>
+              </m.div>
+            </Grid>
+          ))}
+        </Grid>
       </Container>
     </Box>
   );

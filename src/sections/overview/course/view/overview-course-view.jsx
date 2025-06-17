@@ -54,52 +54,69 @@ export function OverviewCourseView() {
             <Typography sx={{ color: 'text.secondary' }}>`How is your health today!`</Typography>
           </Box>
 
-          <Box
-            sx={{
-              gap: 3,
-              display: 'grid',
-              gridTemplateColumns: { xs: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' },
-            }}
-          >
-            <CourseWidgetSummary
-              title="Schedule your next visit"
-              total="Book Appointment"
-              icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-progress.svg`}
-            />
+   <Box
+  sx={{
+    gap: 3,
+    display: 'grid',
+    gridTemplateColumns: { xs: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' },
+  }}
+>
 
-            <CourseWidgetSummary
-              title="Order your medications"
-              total="Pharmacy"
-              color="success"
-              icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-completed.svg`}
-            />
+  <Box component="a" href="/dashboard/appointment" sx={{ textDecoration: 'none' }}>
+    <CourseWidgetSummary
+      title="Schedule your next visit"
+      total="Book Appointment"
+      icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-progress.svg`}
+    />
+  </Box>
 
-            <CourseWidgetSummary
-              title="Book Checkups & Lab Tests"
-              total="Diagnostics"
-              color="secondary"
-              icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-certificates.svg`}
-            />
-            <CourseWidgetSummary
-              title="Healthcare at your doorstep"
-              total="Home Visit"
-              icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-progress.svg`}
-            />
+  <Box component="a" href="/pharmacy" sx={{ textDecoration: 'none' }}>
+    <CourseWidgetSummary
+      title="Order your medications"
+      total="Pharmacy"
+      color="success"
+      icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-completed.svg`}
+    />
+  </Box>
 
-            <CourseWidgetSummary
-              title="Quick Assistance"
-              total="Emergency"
-              color="success"
-              icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-completed.svg`}
-            />
+  <Box component="a" href="/diagnostics" sx={{ textDecoration: 'none' }}>
+    <CourseWidgetSummary
+      title="Book Checkups & Lab Tests"
+      total="Diagnostics"
+      color="secondary"
+      icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-certificates.svg`}
+    />
+  </Box>
 
-            <CourseWidgetSummary
-              title="Covid"
-              total="Covid"
-              color="secondary"
-              icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-certificates.svg`}
-            />
-          </Box>
+  <Box component="a" href="/home-visit" sx={{ textDecoration: 'none' }}>
+    <CourseWidgetSummary
+      title="Healthcare at your doorstep"
+      total="Home Visit"
+      icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-progress.svg`}
+    />
+  </Box>
+
+  <Box component="a" href="/emergency" sx={{ textDecoration: 'none' }}>
+    <CourseWidgetSummary
+      title="Quick Assistance"
+      total="Emergency"
+      color="success"
+      icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-completed.svg`}
+    />
+  </Box>
+
+  <Box component="a" href="/covid" sx={{ textDecoration: 'none' }}>
+    <CourseWidgetSummary
+      title="Covid"
+      total="Covid"
+      color="secondary"
+      icon={`${CONFIG.site.basePath}/assets/icons/courses/ic-courses-certificates.svg`}
+    />
+  </Box>
+
+</Box>
+
+
 
           <CourseHoursSpent
             title="Hours spent"

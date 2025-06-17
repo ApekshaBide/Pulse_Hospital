@@ -7,6 +7,7 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import { AuthGuard } from 'src/auth/guard';
+import { OverviewAppointmentView } from 'src/sections/overview/appointment/view';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +19,21 @@ const ProductDetailsPage = lazy(() => import('src/pages/dashboard/product/detail
 const ProductListPage = lazy(() => import('src/pages/dashboard/product/list'));
 const ProductCreatePage = lazy(() => import('src/pages/dashboard/product/new'));
 const ProductEditPage = lazy(() => import('src/pages/dashboard/product/edit'));
+
+// Appointment
+const AppointmentPage = lazy(() => import('src/pages/dashboard/appointment/index'));
+const CardiologyPage = lazy(() => import('src/pages/dashboard/appointment/cardiology'));
+const DermatologyPage = lazy(() => import('src/pages/dashboard/appointment/dermatology'));
+const NeurologyPage = lazy(() => import('src/pages/dashboard/appointment/neurology'));
+const OrthopedicsPage = lazy(() => import('src/pages/dashboard/appointment/orthopedics'));
+const OphthalmologyPage = lazy(() => import('src/pages/dashboard/appointment/ophthalmology'));
+const PediatricsPage = lazy(() => import('src/pages/dashboard/appointment/pediatrics'));
+const GynecologyPage = lazy(() => import('src/pages/dashboard/appointment/gynecology'));
+const UrologyPage = lazy(() => import('src/pages/dashboard/appointment/urology'));
+const DentistryPage = lazy(() => import('src/pages/dashboard/appointment/dentistry'));
+const PhysiotherapyPage = lazy(() => import('src/pages/dashboard/appointment/physiotherapy'));
+const GeneralMedicinePage = lazy(() => import('src/pages/dashboard/appointment/general-medicine'));
+
 // Blog
 const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
 const BlogPostPage = lazy(() => import('src/pages/dashboard/post/details'));
@@ -25,6 +41,10 @@ const BlogNewPostPage = lazy(() => import('src/pages/dashboard/post/new'));
 const BlogEditPostPage = lazy(() => import('src/pages/dashboard/post/edit'));
 
 // ----------------------------------------------------------------------
+// Website
+
+const PrivacyAndPolicyPage = lazy(()=>import('src/pages/dashboard/website/details'));
+const TermsAndConditionsPage = lazy(()=>import('src/pages/dashboard/website/details1'));
 
 const layoutContent = (
   <DashboardLayout>
@@ -40,7 +60,25 @@ export const dashboardRoutes = [
     element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard>{layoutContent}</AuthGuard>,
     children: [
       { element: <IndexPage />, index: true },
+      { path: 'appointment', element: <OverviewAppointmentView /> },
       { path: 'patient', element: <OverviewCoursePage /> },
+           {
+        path: 'appointment',
+        children: [
+          { element: <OverviewAppointmentView />, index: true },
+          { path: 'cardiology', element: <CardiologyPage /> },
+          { path: 'dermatology', element: <DermatologyPage /> },
+          { path: 'neurology', element: <NeurologyPage /> },
+          { path: 'orthopedics', element: <OrthopedicsPage /> },
+          { path: 'ophthalmology', element: <OphthalmologyPage /> },
+          { path: 'pediatrics', element: <PediatricsPage /> },
+          { path: 'gynecology', element: <GynecologyPage /> },
+          { path: 'urology', element: <UrologyPage /> },
+          { path: 'dentistry', element: <DentistryPage /> },
+          { path: 'physiotherapy', element: <PhysiotherapyPage /> },
+          { path: 'general-medicine', element: <GeneralMedicinePage /> },
+        ],
+      },
       {
         path: 'product',
         children: [
@@ -59,6 +97,14 @@ export const dashboardRoutes = [
           { path: ':title', element: <BlogPostPage /> },
           { path: ':title/edit', element: <BlogEditPostPage /> },
           { path: 'new', element: <BlogNewPostPage /> },
+        ],
+      },
+      {
+        path: 'website',
+        children: [
+          { element: <PrivacyAndPolicyPage />, index: true },
+          { path: 'privacy_policy', element: <PrivacyAndPolicyPage /> },
+          { path: 'terms_conditions', element: <TermsAndConditionsPage /> }
         ],
       },
     ],
