@@ -4,18 +4,17 @@ import React, { useState } from 'react';
 
 // 2️⃣ MUI core components (alphabetically)
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
+import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
+import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
+import CardContent from '@mui/material/CardContent';
 
 // 3️⃣ Other imports (non-MUI)
 import { useRouter } from 'src/routes/hooks';
-
 
 // Import the booking component
 import BookAppointmentPage from './book-appointment-page';
@@ -82,18 +81,6 @@ const doctorsData = {
       homeVisit: true,
       nextAvailable: "Today, 3:00 PM",
       availableSlots: ["10:00 AM", "1:00 PM", "3:00 PM", "6:00 PM"]
-    },
-    {
-      id: 6,
-      name: "Dr. Arun Verma",
-      qualifications: "MBBS, DM Cardiology",
-      experience: "22+ years",
-      rating: 4.7,
-      slots: 2,
-      fee: 1200,
-      homeVisit: false,
-      nextAvailable: "Tomorrow, 11:00 AM",
-      availableSlots: ["11:00 AM", "4:00 PM"]
     }
   ],
   dermatology: [
@@ -654,8 +641,69 @@ const doctorsData = {
       availableSlots: ["10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM"]
     }
   ],
-}
-
+  "general-medicine": [
+    {
+      id: 1,
+      name: "Dr. John Anderson",
+      qualifications: "MBBS, MD General Medicine",
+      experience: "15+ years",
+      rating: 4.7,
+      slots: 6,
+      fee: 500,
+      homeVisit: true,
+      nextAvailable: "Today, 9:00 AM",
+      availableSlots: ["9:00 AM", "10:00 AM", "11:00 AM", "2:00 PM", "3:00 PM", "4:00 PM"]
+    },
+    {
+      id: 2,
+      name: "Dr. Priya Mehta",
+      qualifications: "MBBS, MD Internal Medicine",
+      experience: "11+ years",
+      rating: 4.6,
+      slots: 5,
+      fee: 450,
+      homeVisit: true,
+      nextAvailable: "Today, 10:00 AM",
+      availableSlots: ["10:00 AM", "12:00 PM", "1:00 PM", "3:00 PM", "5:00 PM"]
+    },
+    {
+      id: 3,
+      name: "Dr. Robert Taylor",
+      qualifications: "MBBS, MD General Medicine",
+      experience: "18+ years",
+      rating: 4.8,
+      slots: 4,
+      fee: 600,
+      homeVisit: false,
+      nextAvailable: "Today, 11:00 AM",
+      availableSlots: ["11:00 AM", "1:00 PM", "3:00 PM", "5:00 PM"]
+    },
+    {
+      id: 4,
+      name: "Dr. Sunita Rao",
+      qualifications: "MBBS, MD Internal Medicine",
+      experience: "13+ years",
+      rating: 4.5,
+      slots: 5,
+      fee: 520,
+      homeVisit: true,
+      nextAvailable: "Today, 2:00 PM",
+      availableSlots: ["10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM"]
+    },
+    {
+      id: 5,
+      name: "Dr. Michael Zhang",
+      qualifications: "MBBS, MD General Medicine",
+      experience: "9+ years",
+      rating: 4.4,
+      slots: 6,
+      fee: 480,
+      homeVisit: true,
+      nextAvailable: "Today, 12:30 PM",
+      availableSlots: ["9:30 AM", "11:30 AM", "12:30 PM", "2:30 PM", "4:30 PM", "6:30 PM"]
+    }
+  ]
+};
 
 const specialtyNames = {
   cardiology: "Cardiology Doctors",
@@ -698,6 +746,9 @@ export default function SpecialtyDoctorPage({ specialty }) {
     setSelectedDoctor(null);
   };
 
+  // Number of slots to show: 2 on mobile, 3 on tablet and up
+  const slotsToShow = window.innerWidth < 600 ? 2 : 3;
+
   if (!doctors || doctors.length === 0) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
@@ -719,15 +770,21 @@ export default function SpecialtyDoctorPage({ specialty }) {
   }
 
   return (
-    <Box>
+    <Box sx={{
+      p: { xs: 1, sm: 2, md: 3 },
+      maxWidth: '100%',
+      overflow: 'hidden'
+    }}>
       {/* Header */}
-      <Box>
+      <Box mb={{ xs: 2, sm: 3 }}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Box display="flex" alignItems="center" gap={2}>
+          <Box display="flex" alignItems="center" gap={{ xs: 1, sm: 2 }}>
             <IconButton
               onClick={handleBack}
               sx={{
-                p: 1,
+                p: { xs: 0.5, sm: 1 },
+                fontSize: { xs: '1.2rem', sm: '1.4rem' },
+                color: theme.palette.primary.main,
                 '&:hover': { bgcolor: theme.palette.action.hover }
               }}
             >
@@ -735,110 +792,136 @@ export default function SpecialtyDoctorPage({ specialty }) {
             </IconButton>
             <Typography
               variant="h5"
-
               fontWeight="600"
-              sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}
+              sx={{
+                fontSize: { xs: '1.1rem', sm: '1.25rem', md: '1.5rem' },
+              }}
             >
               {specialtyNames[specialty] || `${specialty} Doctors`}
             </Typography>
           </Box>
-          <IconButton>
+          <IconButton sx={{
+            fontSize: { xs: '1.2rem', sm: '1.4rem' },
+            color: theme.palette.primary.main
+          }}>
             ☰
           </IconButton>
         </Box>
       </Box>
 
       {/* Doctor Cards Grid */}
-      <Box sx={{ p: { xs: 1.5, sm: 2 } }}>
-        <Grid container spacing={{ xs: 1.5, sm: 2 }}>
-          {doctors.map((doctor) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={doctor.id}>
-              <Card
-                sx={{
-                  height: '100%',
-                  borderRadius: 2,
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                  border: '1px solid #f0f0f0',
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    transform: 'translateY(-1px)',
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
-                  }
-                }}
-              >
-                <CardContent sx={{ p: { xs: 1.5, sm: 2 }, '&:last-child': { pb: { xs: 1.5, sm: 2 } } }}>
-                  {/* Doctor Avatar & Basic Info */}
-                  <Box display="flex" gap={1.5} mb={1.5}>
-                    <Box
-                      sx={{
-                        width: 45,
-                        height: 45,
-                        borderRadius: '50%',
-                        bgcolor: getAvatarColor(doctor.name),
-                        color: 'white',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.1rem',
-                        fontWeight: 600,
-                        flexShrink: 0
-                      }}
-                    >
-                      {doctor.name.split(' ').map(n => n[0]).join('')}
-                    </Box>
-
-                    <Box flex={1} minWidth={0}>
-                      <Typography
-                        variant="subtitle2"
-                        color="primary"
-                        fontWeight="600"
-                        sx={{
-                          fontSize: '0.95rem',
-                          lineHeight: 1.2,
-                          mb: 0.5,
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
-                        }}
-                      >
-                        {doctor.name}
-                      </Typography>
-
-                      <Box display="flex" alignItems="center" justifyContent="space-between" mb={0.5}>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            bgcolor: '#e8f5e8',
-                            color: '#2e7d32',
-                            px: 0.8,
-                            py: 0.2,
-                            borderRadius: 0.8,
-                            fontWeight: 500,
-                            fontSize: '0.7rem'
-                          }}
-                        >
-                          ⭐ {doctor.rating}
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          color="success.main"
-                          fontWeight="500"
-                          sx={{ fontSize: '0.7rem' }}
-                        >
-                          {doctor.slots} slots
-                        </Typography>
-                      </Box>
-                    </Box>
+      <Grid
+  container
+  spacing={{ xs: 1.5, sm: 2, md: 2.5 }}
+  alignItems="stretch"  // ✅ Ensures all cards are the same height
+>
+  {doctors.map((doctor) => (
+    <Grid
+      item
+      xs={12}
+      sm={6}
+      md={4}
+      lg={3}
+      xl={3}
+      key={doctor.id}
+      sx={{ display: 'flex' }} // ✅ Makes card fill available height
+    >
+      <Card
+        sx={{
+          width: '100%',          // ✅ Fills the Grid column
+          height: '100%',         // ✅ Fills vertical space evenly
+          borderRadius: { xs: 2, sm: 2.5 },
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          border: '1px solid #f0f0f0',
+          transition: 'all 0.3s ease',
+          display: 'flex',
+          flexDirection: 'column',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
+          },
+        }}
+      >
+              <CardContent sx={{
+                p: { xs: 1.2, sm: 1.5 }, // Reduced from 1.5/2
+                '&:last-child': { pb: { xs: 1.2, sm: 1.5 } },
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                {/* Doctor Avatar & Basic Info - Fixed Height */}
+                <Box display="flex" gap={1.2} mb={1.2} sx={{ minHeight: 42}}>
+                  <Box
+                    sx={{
+                      width: { xs: 38, sm: 42 }, // Reduced from 45/50
+                      height: { xs: 38, sm: 42 },
+                      borderRadius: '50%',
+                      bgcolor: getAvatarColor(doctor.name),
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: { xs: '0.9rem', sm: '1rem' }, // Reduced from 1rem/1.1rem
+                      fontWeight: 600,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {doctor.name.split(' ').map(n => n[0]).join('')}
                   </Box>
 
-                  {/* Qualifications & Experience */}
+                  <Box flex={1} minWidth={0}>
+                    <Typography
+                      variant="subtitle2"
+                      color="primary"
+                      fontWeight="600"
+                      sx={{
+                        fontSize: { xs: '0.8rem', sm: '0.85rem' }, // Reduced from 0.9/0.95rem
+                        lineHeight: 1.2,
+                        mb: 0.4, // Reduced from 0.5
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      {doctor.name}
+                    </Typography>
+
+                    <Box display="flex" alignItems="center" justifyContent="space-between" mb={0.4}>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          bgcolor: '#e8f5e8',
+                          color: '#2e7d32',
+                          px: { xs: 0.5, sm: 0.6 }, // Reduced from 0.6/0.8
+                          py: 0.15, // Reduced from 0.2
+                          borderRadius: 0.6, // Reduced from 0.8
+                          fontWeight: 500,
+                          fontSize: { xs: '0.6rem', sm: '0.65rem' } // Reduced from 0.65/0.7rem
+                        }}
+                      >
+                        ⭐ {doctor.rating}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        color="success.main"
+                        fontWeight="500"
+                        sx={{ fontSize: { xs: '0.6rem', sm: '0.65rem' } }} // Reduced from 0.65/0.7rem
+                      >
+                        {doctor.slots} slots
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+
+                {/* Qualifications & Experience - Fixed Height */}
+                <Box sx={{ minHeight: { xs: 35, sm: 38 }, mb: 1.2 }}>
                   <Typography
                     variant="caption"
                     color="text.secondary"
                     display="block"
                     sx={{
-                      fontSize: '0.75rem',
-                      mb: 0.5,
+                      fontSize: { xs: '0.65rem', sm: '0.7rem' }, // Reduced from 0.7/0.75rem
+                      mb: 0.4, // Reduced from 0.5
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap'
@@ -850,118 +933,161 @@ export default function SpecialtyDoctorPage({ specialty }) {
                     variant="caption"
                     color="text.secondary"
                     display="block"
-                    sx={{ fontSize: '0.75rem', mb: 1.5 }}
+                    sx={{ fontSize: { xs: '0.65rem', sm: '0.7rem' } }} // Reduced from 0.7/0.75rem
                   >
                     📅 {doctor.experience}
                   </Typography>
+                </Box>
 
-                  {/* Fee and Visit Type */}
-                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={1.5}>
-                    <Typography
-                      variant="h6"
+                {/* Fee and Visit Type - Fixed Height */}
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={1.2} // Reduced from 1.5
+                  sx={{ minHeight: 26 }} // Reduced from 30
+                >
+                  <Typography
+                    variant="h6"
+                    color="primary"
+                    fontWeight="600"
+                    sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }} // Reduced from 1rem/1.1rem
+                  >
+                    ₹ {doctor.fee}
+                  </Typography>
+                  {doctor.homeVisit && (
+                    <Chip
+                      icon={<span style={{ fontSize: '0.6rem' }}>🏠</span>} // Reduced from 0.7rem
+                      label="Home"
+                      size="small"
                       color="primary"
-                      fontWeight="600"
-                      sx={{ fontSize: '1.1rem' }}
-                    >
-                      ₹ {doctor.fee}
-                    </Typography>
-                    {doctor.homeVisit && (
-                      <Chip
-                        icon={<span style={{ fontSize: '0.7rem' }}>🏠</span>}
-                        label="Home"
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                        sx={{
-                          height: 20,
-                          fontSize: '0.65rem',
-                          '& .MuiChip-label': { px: 0.8 }
-                        }}
-                      />
-                    )}
-                  </Box>
+                      variant="outlined"
+                      sx={{
+                        height: { xs: 16, sm: 18 }, // Reduced from 18/20
+                        fontSize: { xs: '0.55rem', sm: '0.6rem' }, // Reduced from 0.6/0.65rem
+                        '& .MuiChip-label': { px: 0.6 } // Reduced from 0.8
+                      }}
+                    />
+                  )}
+                </Box>
 
-                  {/* Next Available */}
+                {/* Next Available - Fixed Height */}
+                <Box sx={{ minHeight: 18, mb: 1.2 }}>
                   <Typography
                     variant="caption"
                     color="text.secondary"
                     display="block"
-                    sx={{ fontSize: '0.7rem', mb: 1 }}
+                    sx={{ fontSize: { xs: '0.6rem', sm: '0.65rem' } }} // Reduced from 0.65/0.7rem
                   >
                     Next: {doctor.nextAvailable}
                   </Typography>
+                </Box>
 
-                  {/* Available Slots - Show only first 3 */}
-                  <Box display="flex" gap={0.5} mb={1.5} flexWrap="wrap">
-                    {doctor.availableSlots.slice(0, 3).map((slot, index) => (
-                      <Chip
-                        key={index}
-                        label={slot}
-                        variant="outlined"
-                        size="small"
-                        onClick={() => handleTimeSlotClick(doctor, slot)}
-                        sx={{
-                          height: 22,
-                          borderRadius: 1.5,
-                          fontSize: '0.65rem',
-                          cursor: 'pointer',
-                          '& .MuiChip-label': { px: 0.8 },
-                          '&:hover': {
-                            bgcolor: theme.palette.primary.light,
-                            color: 'white',
-                            borderColor: theme.palette.primary.main
-                          }
-                        }}
-                      />
-                    ))}
-                    {doctor.availableSlots.length > 3 && (
-                      <Chip
-                        label={`+${doctor.availableSlots.length - 3} more`}
-                        variant="outlined"
-                        size="small"
-                        onClick={() => handleTimeSlotClick(doctor, doctor.availableSlots[3])}
-                        sx={{
-                          height: 22,
-                          borderRadius: 1.5,
-                          fontSize: '0.65rem',
-                          cursor: 'pointer',
-                          '& .MuiChip-label': { px: 0.8 },
-                          '&:hover': {
-                            bgcolor: theme.palette.primary.light,
-                            color: 'white',
-                            borderColor: theme.palette.primary.main
-                          }
-                        }}
-                      />
-                    )}
-                  </Box>
+                {/* Available Slots - Controlled Display - Fixed Height */}
+                <Box
+                  display="flex"
+                  gap={0}
+                  mb={0}
+                  flexWrap="wrap"
+                  sx={{ minHeight: { xs: 38, sm: 42 } }} // Reduced from 44/48
+                >
+                  {/* Show limited slots based on screen size */}
+                  {doctor.availableSlots.slice(0, slotsToShow).map((slot, index) => (
+                    <Chip
+                      key={index}
+                      label={slot}
+                      variant="outlined"
+                      size="small"
+                      onClick={() => handleTimeSlotClick(doctor, slot)}
+                      sx={{
+                        height: { xs: 16, sm: 18 }, // Reduced from 18/20
+                        borderRadius: 1,
+                        fontSize: { xs: '0.5rem', sm: '0.55rem' }, // Reduced from 0.55/0.6rem
+                        cursor: 'pointer',
+                        mr: { xs: 0.2, sm: 0.3 },
+                        mb: { xs: 0.2, sm: 0.3 },
+                        '& .MuiChip-label': { px: { xs: 0.4, sm: 0.5 } }, // Reduced from 0.5/0.6
 
-                  {/* Book Button */}
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    size="small"
-                    onClick={() => handleTimeSlotClick(doctor, doctor.availableSlots[0])}
-                    sx={{
-                      borderRadius: 1.5,
-                      py: 0.8,
-                      fontSize: '0.8rem',
-                      fontWeight: 600,
-                      textTransform: 'none',
-                      boxShadow: 'none',
-                      '&:hover': {
-                        boxShadow: '0 2px 8px rgba(25, 118, 210, 0.3)'
-                      }
-                    }}
-                  >
-                    Book Now
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+                      }}
+                    />
+                  ))}
+
+                  {/* Show "..." if there are more slots */}
+                  {doctor.availableSlots.length > slotsToShow && (
+                    <Chip
+                      label="..."
+                      variant="outlined"
+                      size="small"
+                      onClick={() => handleTimeSlotClick(doctor, doctor.availableSlots[0])}
+                      sx={{
+                        height: { xs: 16, sm: 18 }, // Reduced from 18/20
+                        borderRadius: 1,
+                        fontSize: { xs: '0.5rem', sm: '0.55rem' }, // Reduced from 0.55/0.6rem
+                        cursor: 'pointer',
+                        minWidth: { xs: 22, sm: 26 }, // Reduced from 26/30
+                        mr: { xs: 0.2, sm: 0.3 },
+                        mb: { xs: 0.2, sm: 0.3 },
+                        '& .MuiChip-label': { px: { xs: 0.4, sm: 0.5 } }, // Reduced from 0.5/0.6
+
+                      }}
+                    />
+                  )}
+                </Box>
+
+                {/* Book Button - Directly touching slots with no top gap */}
+                <Button
+                  fullWidth
+                  variant="contained"
+                  size="small"
+                  onClick={() => handleTimeSlotClick(doctor, doctor.availableSlots[0])}
+                  sx={{
+                    mt: 0, // Remove any top margin
+                    borderRadius: { xs: 1, sm: 1.2 }, // Reduced from 1.2/1.5
+                    py: { xs: 0.5, sm: 0.6 }, // Reduced from 0.6/0.8
+                    fontSize: { xs: '0.65rem', sm: '0.7rem' }, // Reduced from 0.7/0.75rem
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    boxShadow: 'none',
+                    minHeight: { xs: 24, sm: 28 }, // Reduced from 28/32
+
+                  }}
+                >
+                  Book Now
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* No Results Message */}
+      {doctors.length === 0 && (
+        <Box
+          textAlign="center"
+          py={{ xs: 4, sm: 6 }}
+          sx={{
+            bgcolor: theme.palette.grey[50],
+            borderRadius: { xs: 2, sm: 3 },
+            mt: 2
+          }}
+        >
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            sx={{ fontSize: { xs: '1rem', sm: '1.1rem' } }}
+          >
+            No doctors found
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            mt={1}
+            sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
+          >
+            Please try again later or contact support
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 }

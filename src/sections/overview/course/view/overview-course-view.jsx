@@ -70,7 +70,7 @@ export function OverviewCourseView() {
     />
   </Box>
 
-  <Box component="a" href="/pharmacy" sx={{ textDecoration: 'none' }}>
+  <Box component="a" href="/dashboard/pharmacy" sx={{ textDecoration: 'none' }}>
     <CourseWidgetSummary
       title="Order your medications"
       total="Pharmacy"
@@ -79,7 +79,7 @@ export function OverviewCourseView() {
     />
   </Box>
 
-  <Box component="a" href="/diagnostics" sx={{ textDecoration: 'none' }}>
+  <Box component="a" href="/dashboard/diagnostics" sx={{ textDecoration: 'none' }}>
     <CourseWidgetSummary
       title="Book Checkups & Lab Tests"
       total="Diagnostics"
@@ -88,7 +88,7 @@ export function OverviewCourseView() {
     />
   </Box>
 
-  <Box component="a" href="/home-visit" sx={{ textDecoration: 'none' }}>
+  <Box component="a" href="/dashboard/homevisit" sx={{ textDecoration: 'none' }}>
     <CourseWidgetSummary
       title="Healthcare at your doorstep"
       total="Home Visit"
@@ -96,7 +96,7 @@ export function OverviewCourseView() {
     />
   </Box>
 
-  <Box component="a" href="/emergency" sx={{ textDecoration: 'none' }}>
+  <Box component="a" href="/dashboard/emergency" sx={{ textDecoration: 'none' }}>
     <CourseWidgetSummary
       title="Quick Assistance"
       total="Emergency"
@@ -105,7 +105,7 @@ export function OverviewCourseView() {
     />
   </Box>
 
-  <Box component="a" href="/covid" sx={{ textDecoration: 'none' }}>
+  <Box component="a" href="/dashboard/covid" sx={{ textDecoration: 'none' }}>
     <CourseWidgetSummary
       title="Covid"
       total="Covid"

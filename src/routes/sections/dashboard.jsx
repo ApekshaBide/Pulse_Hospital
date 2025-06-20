@@ -6,8 +6,17 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 
 import { LoadingScreen } from 'src/components/loading-screen';
 
-import { AuthGuard } from 'src/auth/guard';
+import { OverviewCovidView } from 'src/sections/overview/covid/view';
+import { OverviewPharmacyView } from 'src/sections/overview/pharmacy/view';
+import { OverviewEmergencyView } from 'src/sections/overview/emergency/view';
+import { OverviewHomevisitView } from 'src/sections/overview/homevisit/view';
 import { OverviewAppointmentView } from 'src/sections/overview/appointment/view';
+import { OverviewDiagnosticsView } from 'src/sections/overview/diagnostics/view';
+
+import { AuthGuard } from 'src/auth/guard';
+
+
+
 
 // ----------------------------------------------------------------------
 
@@ -61,6 +70,11 @@ export const dashboardRoutes = [
     children: [
       { element: <IndexPage />, index: true },
       { path: 'appointment', element: <OverviewAppointmentView /> },
+      { path: 'pharmacy', element: <OverviewPharmacyView />},
+      { path: 'diagnostics', element: <OverviewDiagnosticsView />},
+      { path: 'homevisit', element: <OverviewHomevisitView />},
+      { path: 'emergency', element: <OverviewEmergencyView />},
+      { path: 'covid', element: <OverviewCovidView />},
       { path: 'patient', element: <OverviewCoursePage /> },
            {
         path: 'appointment',
@@ -79,6 +93,7 @@ export const dashboardRoutes = [
           { path: 'general-medicine', element: <GeneralMedicinePage /> },
         ],
       },
+
       {
         path: 'product',
         children: [

@@ -4,19 +4,18 @@ import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Fade from '@mui/material/Fade';
 import Card from '@mui/material/Card';
+import Radio from '@mui/material/Radio';
+import Slide from '@mui/material/Slide';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import TextField from '@mui/material/TextField';
+import { useTheme } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import RadioGroup from '@mui/material/RadioGroup';
 import CardContent from '@mui/material/CardContent';
 import FormControl from '@mui/material/FormControl';
-import Grid from '@mui/material/Grid';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import IconButton from '@mui/material/IconButton';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import Slide from '@mui/material/Slide';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -36,7 +35,6 @@ export default function FinalBookingPage({
     paymentMethod: 'pay-at-hospital'
   });
 
-  // Fee structure
   const consultationFee = doctor?.fee || 800;
   const convenienceFee = 50;
   const totalAmount = consultationFee + convenienceFee;
@@ -72,10 +70,8 @@ export default function FinalBookingPage({
 
     console.log('Final Booking Data:', finalBookingData);
 
-    // Here you would typically send the data to your backend
     alert(`Booking Confirmed Successfully!\n\nBooking ID: #${Math.random().toString(36).substr(2, 9).toUpperCase()}\nTotal Amount: ₹${totalAmount}\nPayment Method: ${formData.paymentMethod === 'pay-at-hospital' ? 'Pay at Hospital' : formData.paymentMethod === 'card' ? 'Credit/Debit Card' : 'UPI Payment'}`);
 
-    // Navigate to success page or dashboard
     router.push('/dashboard/appointment');
   };
 
@@ -83,12 +79,14 @@ export default function FinalBookingPage({
     formData.phoneNumber.trim() !== '' && formData.symptoms.trim() !== '';
 
   return (
-    <Box sx={{
-      minHeight: '100vh',
-      bgcolor: '#f8f9fa',
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-      pb: 4
-    }}>
+   <Box
+  sx={{
+    p: { xs: 2, sm: 3 },
+    maxWidth: '600px',
+    mx: { xs: 1, sm: 'auto', md: 'auto' }, // horizontal margin responsive
+    ml: { xs: 1, sm: 2, md: 3 }, // responsive left margin
+  }}
+>
       {/* Header */}
       <Box sx={{
         bgcolor: 'white',
@@ -129,10 +127,11 @@ export default function FinalBookingPage({
           <Card sx={{
             borderRadius: 3,
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-            mb: 4
+            mb: 4,
+             mr: { xs: 1.5, sm: 2 }
           }}>
             <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
-              {/* Phone Number Field */}
+              {/* Phone Number */}
               <Box mb={3}>
                 <Box display="flex" alignItems="center" gap={2} mb={1}>
                   <Typography sx={{ fontSize: '1.2rem' }}>📞</Typography>
@@ -168,7 +167,7 @@ export default function FinalBookingPage({
 
               <Divider sx={{ my: 3 }} />
 
-              {/* Email Field */}
+              {/* Email */}
               <Box mb={3}>
                 <Box display="flex" alignItems="center" gap={2} mb={1}>
                   <Typography sx={{ fontSize: '1.2rem' }}>✉️</Typography>
@@ -204,7 +203,7 @@ export default function FinalBookingPage({
 
               <Divider sx={{ my: 3 }} />
 
-              {/* Symptoms Field */}
+              {/* Symptoms */}
               <Box mb={4}>
                 <Box display="flex" alignItems="center" gap={2} mb={1}>
                   <Typography sx={{ fontSize: '1.2rem' }}>📝</Typography>
@@ -250,76 +249,62 @@ export default function FinalBookingPage({
                     value={formData.paymentMethod}
                     onChange={handleInputChange('paymentMethod')}
                   >
-                    <Card sx={{
-                      mb: 2,
-                      border: formData.paymentMethod === 'pay-at-hospital' ? `3px solid ${theme.palette.primary.main}` : '2px solid #e0e0e0',
-                      borderRadius: 3,
-                      bgcolor: formData.paymentMethod === 'pay-at-hospital' ? `${theme.palette.primary.main}08` : 'white',
-                      transition: 'all 0.3s ease'
-                    }}>
-                      <CardContent sx={{ py: 2, px: 3 }}>
-                        <FormControlLabel
-                          value="pay-at-hospital"
-                          control={<Radio sx={{ color: theme.palette.primary.main }} />}
-                          label={
-                            <Box display="flex" alignItems="center" gap={2}>
-                              <Typography sx={{ fontSize: '1.5rem' }}>🏥</Typography>
-                              <Typography variant="h6" fontWeight="600">
-                                Pay at Hospital
-                              </Typography>
-                            </Box>
-                          }
-                          sx={{ margin: 0, width: '100%' }}
-                        />
-                      </CardContent>
-                    </Card>
-
-                    <Card sx={{
-                      mb: 2,
-                      border: formData.paymentMethod === 'card' ? `3px solid ${theme.palette.primary.main}` : '2px solid #e0e0e0',
-                      borderRadius: 3,
-                      bgcolor: formData.paymentMethod === 'card' ? `${theme.palette.primary.main}08` : 'white',
-                      transition: 'all 0.3s ease'
-                    }}>
-                      <CardContent sx={{ py: 2, px: 3 }}>
-                        <FormControlLabel
-                          value="card"
-                          control={<Radio sx={{ color: theme.palette.primary.main }} />}
-                          label={
-                            <Box display="flex" alignItems="center" gap={2}>
-                              <Typography sx={{ fontSize: '1.5rem' }}>💳</Typography>
-                              <Typography variant="h6" fontWeight="600">
-                                Credit/Debit Card
-                              </Typography>
-                            </Box>
-                          }
-                          sx={{ margin: 0, width: '100%' }}
-                        />
-                      </CardContent>
-                    </Card>
-
-                    <Card sx={{
-                      border: formData.paymentMethod === 'upi' ? `3px solid ${theme.palette.primary.main}` : '2px solid #e0e0e0',
-                      borderRadius: 3,
-                      bgcolor: formData.paymentMethod === 'upi' ? `${theme.palette.primary.main}08` : 'white',
-                      transition: 'all 0.3s ease'
-                    }}>
-                      <CardContent sx={{ py: 2, px: 3 }}>
-                        <FormControlLabel
-                          value="upi"
-                          control={<Radio sx={{ color: theme.palette.primary.main }} />}
-                          label={
-                            <Box display="flex" alignItems="center" gap={2}>
-                              <Typography sx={{ fontSize: '1.5rem' }}>📱</Typography>
-                              <Typography variant="h6" fontWeight="600">
-                                UPI Payment
-                              </Typography>
-                            </Box>
-                          }
-                          sx={{ margin: 0, width: '100%' }}
-                        />
-                      </CardContent>
-                    </Card>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column', sm: 'row' },
+                        gap: { xs: 2, sm: 2.5 }
+                      }}
+                    >
+                      {[
+                        {
+                          value: 'pay-at-hospital',
+                          icon: '🏥',
+                          label: 'Pay at Hospital'
+                        },
+                        {
+                          value: 'card',
+                          icon: '💳',
+                          label: 'Credit/Debit Card'
+                        },
+                        {
+                          value: 'upi',
+                          icon: '📱',
+                          label: 'UPI Payment'
+                        }
+                      ].map((method) => (
+                        <Card
+                          key={method.value}
+                          sx={{
+                            flex: 1,
+                            border: formData.paymentMethod === method.value
+                              ? `3px solid ${theme.palette.primary.main}`
+                              : '2px solid #e0e0e0',
+                            borderRadius: 3,
+                            bgcolor: formData.paymentMethod === method.value
+                              ? `${theme.palette.primary.main}08`
+                              : 'white',
+                            transition: 'all 0.3s ease'
+                          }}
+                        >
+                          <CardContent sx={{ py: 2, px: 3 }}>
+                            <FormControlLabel
+                              value={method.value}
+                              control={<Radio sx={{ color: theme.palette.primary.main }} />}
+                              label={
+                                <Box display="flex" alignItems="center" gap={2}>
+                                  <Typography sx={{ fontSize: '1.5rem' }}>{method.icon}</Typography>
+                                  <Typography variant="h6" fontWeight="600">
+                                    {method.label}
+                                  </Typography>
+                                </Box>
+                              }
+                              sx={{ margin: 0, width: '100%' }}
+                            />
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </Box>
                   </RadioGroup>
                 </FormControl>
               </Box>
@@ -367,7 +352,7 @@ export default function FinalBookingPage({
           </Card>
         </Fade>
 
-        {/* Confirm Booking Button */}
+        {/* Confirm Button */}
         <Fade in={showContent} timeout={800}>
           <Button
             fullWidth
