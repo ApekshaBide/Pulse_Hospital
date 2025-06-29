@@ -111,140 +111,168 @@ export default function BookAppointmentPage({ doctor, specialty, onBack }) {
                 </Typography>
 
     <Box sx={{ minHeight: '100vh' }}>
-      <Box>
-        <Slide direction="right" in={showContent} timeout={500}>
-          <Box display="flex" alignItems="center" gap={2}>
-            <IconButton onClick={handleBack} sx={{ p: 1, color: theme.palette.primary.main }}>
-              <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>←</Typography>
-            </IconButton>
-            <Typography variant="h5" color="primary" fontWeight="600">Book Appointment</Typography>
-          </Box>
-        </Slide>
-      </Box>
+  <Box sx={{ mt: { xs: 2, sm: 3 } }}>
+  <Slide direction="right" in={showContent} timeout={500}>
+    <Box display="flex" alignItems="center" gap={2}>
+      <IconButton
+        onClick={handleBack}
+        sx={{
+          width: { xs: 36, sm: 42 },     // Equal width and height for circle
+          height: { xs: 36, sm: 42 },
+          borderRadius: '50%',
+          bgcolor: 'primary.light',
+          color: 'primary.contrastText',
+          p: 0,
+          '&:hover': {
+            bgcolor: 'primary.main',
+            transform: 'scale(1.05)'
+          },
+          transition: 'all 0.2s ease'
+        }}
+      >
+        <Typography sx={{ fontSize: { xs: '1rem', sm: '1.2rem' }, fontWeight: 'bold' }}>
+          ←
+        </Typography>
+      </IconButton>
+      <Typography variant="h5" fontWeight="600">Book Appointment</Typography>
+    </Box>
+  </Slide>
+</Box>
+
 
       <Fade in={showContent} timeout={600}>
         <Grid container spacing={3} sx={{ mt: 2 }}>
 
           {/* Left Doctor Info */}
-          <Grid xs={12} md={4}>
-            <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
-              <Box sx={{
-                width: 80, height: 80, borderRadius: '50%',
-                bgcolor: 'primary.light', color: 'primary.contrastText',
-                fontSize: '1.8rem', fontWeight: 600, mx: 'auto', mb: 2,
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
-              }}>
-                {doctor.name.split(' ').map(n => n[0]).join('')}
-              </Box>
-              <Typography variant="h6">{doctor.name}</Typography>
-              <Typography variant="body2" color="text.secondary">{specialty || 'Specialist'}</Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                ⭐ {doctor.rating} | 📅 {doctor.experience}
-              </Typography>
-              <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
-                ₹{doctor.fee}
-              </Typography>
-            </Card>
-          </Grid>
+       <Grid container spacing={3}>
+  {/* Doctor Card */}
+  <Grid item xs={12} md={4}>
+    <Card sx={{ pt: 6, pb: 4, px: 3, textAlign: 'center', height: '30%' }}>
+      <Box sx={{
+        width: 80,
+        height: 80,
+        borderRadius: '50%',
+        bgcolor: 'primary.light',
+        color: 'primary.contrastText',
+        fontSize: '1.8rem',
+        fontWeight: 600,
+        mx: 'auto',
+        mb: 2,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        {doctor.name.split(' ').map(n => n[0]).join('')}
+      </Box>
+      <Typography variant="h6">{doctor.name}</Typography>
+      <Typography variant="body2" color="text.secondary">{specialty || 'Specialist'}</Typography>
+      <Typography variant="body2" sx={{ mt: 1 }}>
+        ⭐ {doctor.rating} | 📅 {doctor.experience}
+      </Typography>
+      <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
+        ₹{doctor.fee}
+      </Typography>
+    </Card>
+  </Grid>
 
-          {/* Right Appointment Form */}
-          <Grid xs={12} md={8}>
-            <Card sx={{ p: 3 }}>
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+  {/* Right Appointment Form */}
+  <Grid item xs={12} md={8}>
+    <Card sx={{ p: { xs: 2, sm: 3 } }}>
+      <Box
+        rowGap={3}
+        columnGap={2}
+        display="grid"
+        gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+      >
+        {/* Appointment Mode */}
+        <Box gridColumn="span 2">
+          <Typography variant="subtitle1">Appointment Mode</Typography>
+          <Stack direction="row" spacing={2} mt={1}>
+            <Button
+              variant={formData.appointmentMode === 'in-person' ? 'contained' : 'outlined'}
+              onClick={() => setFormData(prev => ({ ...prev, appointmentMode: 'in-person' }))}
+            >In-Person</Button>
+            <Button
+              variant={formData.appointmentMode === 'video' ? 'contained' : 'outlined'}
+              onClick={() => setFormData(prev => ({ ...prev, appointmentMode: 'video' }))}
+            >Video Call</Button>
+          </Stack>
+        </Box>
+
+        {/* Select Date */}
+        <Box gridColumn="span 2">
+          <Typography variant="subtitle1">Select Date</Typography>
+          <Stack direction="row" spacing={1} mt={1} flexWrap="wrap">
+            {availableDates.map(day => (
+              <Button
+                key={day.id}
+                variant={formData.selectedDate === day.id.toString() ? 'contained' : 'outlined'}
+                onClick={() => setFormData(prev => ({ ...prev, selectedDate: day.id.toString() }))}
               >
+                {day.label}
+              </Button>
+            ))}
+          </Stack>
+        </Box>
 
-                {/* Appointment Mode */}
-                <Box gridColumn="span 2">
-                  <Typography variant="subtitle1">Appointment Mode</Typography>
-                  <Stack direction="row" spacing={2} mt={1}>
-                    <Button
-                      variant={formData.appointmentMode === 'in-person' ? 'contained' : 'outlined'}
-                      onClick={() => setFormData(prev => ({ ...prev, appointmentMode: 'in-person' }))}
-                    >In-Person</Button>
-                    <Button
-                      variant={formData.appointmentMode === 'video' ? 'contained' : 'outlined'}
-                      onClick={() => setFormData(prev => ({ ...prev, appointmentMode: 'video' }))}
-                    >Video Call</Button>
-                  </Stack>
-                </Box>
+        {/* Select Time */}
+        <Box gridColumn="span 2">
+          <Typography variant="subtitle1">Select Time</Typography>
+          <Stack direction="row" spacing={1} mt={1} flexWrap="wrap">
+            {timeSlots.map(time => (
+              <Button
+                key={time}
+                variant={formData.selectedTime === time ? 'contained' : 'outlined'}
+                onClick={() => setFormData(prev => ({ ...prev, selectedTime: time }))}
+              >{time}</Button>
+            ))}
+          </Stack>
+        </Box>
 
-                {/* Select Date */}
-                <Box gridColumn="span 2">
-                  <Typography variant="subtitle1">Select Date</Typography>
-                  <Stack direction="row" spacing={1} mt={1} flexWrap="wrap">
-                    {availableDates.map(day => (
-                      <Button
-                        key={day.id}
-                        variant={formData.selectedDate === day.id.toString() ? 'contained' : 'outlined'}
-                        onClick={() => setFormData(prev => ({ ...prev, selectedDate: day.id.toString() }))}
-                      >
-                        {day.label}
-                      </Button>
-                    ))}
-                  </Stack>
-                </Box>
+        {/* Patient Details */}
+        <TextField label="Patient Name" fullWidth variant="standard" value={formData.patientName} onChange={handleInputChange('patientName')} />
+        <TextField label="Phone Number" fullWidth variant="standard" value={formData.phoneNumber} onChange={handleInputChange('phoneNumber')} />
+        <TextField label="Email (Optional)" fullWidth variant="standard" value={formData.email} onChange={handleInputChange('email')} />
+        <TextField label="Symptoms" fullWidth variant="standard" multiline rows={3} value={formData.symptoms} onChange={handleInputChange('symptoms')} />
 
-                {/* Select Time */}
-                <Box gridColumn="span 2">
-                  <Typography variant="subtitle1">Select Time</Typography>
-                  <Stack direction="row" spacing={1} mt={1} flexWrap="wrap">
-                    {timeSlots.map(time => (
-                      <Button
-                        key={time}
-                        variant={formData.selectedTime === time ? 'contained' : 'outlined'}
-                        onClick={() => setFormData(prev => ({ ...prev, selectedTime: time }))}
-                      >{time}</Button>
-                    ))}
-                  </Stack>
-                </Box>
+        {/* Payment */}
+        <Box gridColumn="span 2">
+          <Typography variant="subtitle1">Payment Method</Typography>
+          <RadioGroup value={formData.paymentMethod} onChange={handleInputChange('paymentMethod')}>
+            <FormControlLabel value="pay-at-hospital" control={<Radio />} label="Pay at Hospital" />
+            <FormControlLabel value="card" control={<Radio />} label="Credit/Debit Card" />
+            <FormControlLabel value="upi" control={<Radio />} label="UPI Payment" />
+          </RadioGroup>
+        </Box>
 
-                {/* Patient Information */}
-                <TextField label="Patient Name" fullWidth variant="standard" value={formData.patientName} onChange={handleInputChange('patientName')} />
-                <TextField label="Phone Number" fullWidth variant="standard" value={formData.phoneNumber} onChange={handleInputChange('phoneNumber')} />
-                <TextField label="Email (Optional)" fullWidth variant="standard" value={formData.email} onChange={handleInputChange('email')} />
-                <TextField label="Symptoms" fullWidth variant="standard" multiline rows={3} value={formData.symptoms} onChange={handleInputChange('symptoms')} />
+        {/* Fee Summary */}
+        <Box gridColumn="span 2">
+          <Divider sx={{ mb: 2 }} />
+          <Box display="flex" justifyContent="space-between" mb={1}>
+            <Typography>Consultation Fee:</Typography>
+            <Typography>₹{consultationFee}</Typography>
+          </Box>
+          <Box display="flex" justifyContent="space-between" mb={1}>
+            <Typography>Convenience Fee:</Typography>
+            <Typography>₹{convenienceFee}</Typography>
+          </Box>
+          <Box display="flex" justifyContent="space-between" fontWeight="bold">
+            <Typography>Total Amount:</Typography>
+            <Typography color="primary">₹{totalAmount}</Typography>
+          </Box>
+        </Box>
+      </Box>
 
-                {/* Payment Method */}
-                <Box gridColumn="span 2">
-                  <Typography variant="subtitle1">Payment Method</Typography>
-                  <RadioGroup value={formData.paymentMethod} onChange={handleInputChange('paymentMethod')}>
-                    <FormControlLabel value="pay-at-hospital" control={<Radio />} label="Pay at Hospital" />
-                    <FormControlLabel value="card" control={<Radio />} label="Credit/Debit Card" />
-                    <FormControlLabel value="upi" control={<Radio />} label="UPI Payment" />
-                  </RadioGroup>
-                </Box>
+      {/* Confirm Button */}
+      <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
+        <LoadingButton variant="contained" fullWidth onClick={handleConfirmBooking} disabled={!canProceed()}>
+          Confirm Booking
+        </LoadingButton>
+      </Stack>
+    </Card>
+  </Grid>
+</Grid>
 
-                {/* Fee Summary */}
-                <Box gridColumn="span 2">
-                  <Divider sx={{ mb: 2 }} />
-                  <Box display="flex" justifyContent="space-between" mb={1}>
-                    <Typography>Consultation Fee:</Typography>
-                    <Typography>₹{consultationFee}</Typography>
-                  </Box>
-                  <Box display="flex" justifyContent="space-between" mb={1}>
-                    <Typography>Convenience Fee:</Typography>
-                    <Typography>₹{convenienceFee}</Typography>
-                  </Box>
-                  <Box display="flex" justifyContent="space-between" fontWeight="bold">
-                    <Typography>Total Amount:</Typography>
-                    <Typography color="primary">₹{totalAmount}</Typography>
-                  </Box>
-                </Box>
-
-              </Box>
-
-              {/* Confirm Button */}
-              <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton variant="contained" fullWidth onClick={handleConfirmBooking} disabled={!canProceed()}>
-                  Confirm Booking
-                </LoadingButton>
-              </Stack>
-            </Card>
-          </Grid>
 
         </Grid>
       </Fade>

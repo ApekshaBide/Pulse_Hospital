@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { CONFIG } from 'src/config-global';
 import { DashboardLayout } from 'src/layouts/dashboard';
 
-import { LoadingScreen } from 'src/components/loading-screen';
+import { LoadingScreen } from 'src/components/loading-screen';;
 
 import { OverviewCovidView } from 'src/sections/overview/covid/view';
 import { OverviewPharmacyView } from 'src/sections/overview/pharmacy/view';
@@ -13,12 +13,15 @@ import { OverviewHomevisitView } from 'src/sections/overview/homevisit/view';
 import { OverviewAppointmentView } from 'src/sections/overview/appointment/view';
 import { OverviewDiagnosticsView } from 'src/sections/overview/diagnostics/view';
 
+const DiagnosticsOverviewPage = lazy(() => import('src/pages/dashboard/diagnostics/overview'));
+const DiagnosticsCategoryPage = lazy(() => import('src/pages/dashboard/diagnostics/category'));
+const DiagnosticsTestPage = lazy(() => import('src/pages/dashboard/diagnostics/test'));
+const DiagnosticsPackagePage = lazy(() => import('src/pages/dashboard/diagnostics/package'));
+ const DiagnosticsCartPage = lazy(() => import('src/pages/dashboard/diagnostics/cart'));
+
 import { AuthGuard } from 'src/auth/guard';
 
 
-
-
-// ----------------------------------------------------------------------
 
 // Overview
 const IndexPage = lazy(() => import('src/pages/dashboard'));
@@ -56,11 +59,13 @@ const PrivacyAndPolicyPage = lazy(()=>import('src/pages/dashboard/website/detail
 const TermsAndConditionsPage = lazy(()=>import('src/pages/dashboard/website/details1'));
 
 const layoutContent = (
-  <DashboardLayout>
-    <Suspense fallback={<LoadingScreen />}>
-      <Outlet />
-    </Suspense>
-  </DashboardLayout>
+    <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
 );
 
 export const dashboardRoutes = [
@@ -102,6 +107,16 @@ export const dashboardRoutes = [
           { path: ':id', element: <ProductDetailsPage /> },
           { path: 'new', element: <ProductCreatePage /> },
           { path: ':id/edit', element: <ProductEditPage /> },
+        ],
+      },
+      {
+        path: 'diagnostics',
+        children: [
+          { element: <DiagnosticsOverviewPage />, index: true },
+          { path: 'category/:categoryId', element: <DiagnosticsCategoryPage /> },
+          { path: 'test/:testId', element: <DiagnosticsTestPage /> },
+          { path: 'package/:packageId', element: <DiagnosticsPackagePage /> },
+          { path: 'cart', element: <DiagnosticsCartPage /> },
         ],
       },
       {

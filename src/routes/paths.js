@@ -122,6 +122,14 @@ export const paths = {
       ophthalmology: `${ROOTS.DASHBOARD}/appointment/ophthalmology`,
       pediatrics: `${ROOTS.DASHBOARD}/appointment/pediatrics`,
     },
+    diagnostics: {
+      root: '/dashboard/diagnostics',
+      category: (id) => `/dashboard/diagnostics/category/${id}`,
+      test: (id) => `/dashboard/diagnostics/test/${id}`,
+      package: (id) => `/dashboard/diagnostics/package/${id}`,
+      cart: '/dashboard/diagnostics/cart',
+      booking: '/dashboard/diagnostics/booking',
+    },
     general: {
       app: `${ROOTS.DASHBOARD}/app`,
       ecommerce: `${ROOTS.DASHBOARD}/ecommerce`,

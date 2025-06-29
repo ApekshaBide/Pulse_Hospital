@@ -61,53 +61,65 @@ export default function MedicalSpecialties() {
       overflow: 'hidden'
     }}>
       {/* Search Section - Enhanced Responsive */}
-      <Box mb={{ xs: 3, sm: 4 }}>
-        <Box
-          display="flex"
-          gap={{ xs: 1, sm: 2 }}
-          flexDirection={{ xs: 'column', sm: 'row' }}
-        >
-          <TextField
-            fullWidth
-            placeholder="Search specialties..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Typography sx={{ fontSize: { xs: '1rem', sm: '1.1rem' } }}>🔍</Typography>
-                </InputAdornment>
-              )
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: { xs: 1.5, sm: 2 },
-                bgcolor: alpha(theme.palette.background.paper, 0.8),
-                border: `1px solid ${alpha(theme.palette.grey[500], 0.12)}`,
-                fontSize: { xs: '0.9rem', sm: '1rem' },
-                minHeight: { xs: 48, sm: 56 },
-                '& fieldset': { border: 'none' },
-                '&:hover': { bgcolor: alpha(theme.palette.background.paper, 0.9) },
-                '&.Mui-focused': { border: `2px solid ${theme.palette.primary.main}` },
-              },
-            }}
-          />
-          <IconButton
-            sx={{
-              width: { xs: 48, sm: 56 },
-              height: { xs: 48, sm: 56 },
-              borderRadius: { xs: 1.5, sm: 2 },
-              bgcolor: theme.palette.primary.main,
-              color: '#fff',
-              fontSize: { xs: '1.2rem', sm: '1.4rem' },
-              alignSelf: { xs: 'center', sm: 'stretch' },
-              '&:hover': { bgcolor: theme.palette.primary.dark }
-            }}
-          >
-            ☰
-          </IconButton>
-        </Box>
-      </Box>
+<Box mb={{ xs: 3, sm: 4 }}>
+  <Box
+    display="flex"
+    gap={{ xs: 1.5, sm: 2 }}
+    flexDirection="row"
+    alignItems="center"
+  >
+    <TextField
+      fullWidth
+      placeholder="Search specialties..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <Typography sx={{ fontSize: { xs: '1rem', sm: '1.1rem' } }}>🔍</Typography>
+          </InputAdornment>
+        )
+      }}
+      sx={{
+        flexGrow: 1,
+        '& .MuiOutlinedInput-root': {
+          borderRadius: { xs: 1.5, sm: 2 },
+          bgcolor: alpha(theme.palette.background.paper, 0.85),
+          border: `1px solid ${alpha(theme.palette.grey[500], 0.15)}`,
+          fontSize: { xs: '0.9rem', sm: '1rem' },
+          minHeight: { xs: 48, sm: 56 },
+          '& fieldset': { border: 'none' },
+          '&:hover': {
+            bgcolor: alpha(theme.palette.background.paper, 1),
+          },
+          '&.Mui-focused': {
+            border: `2px solid ${theme.palette.primary.main}`,
+          },
+        },
+      }}
+    />
+
+    <IconButton
+      sx={{
+        ml: { xs: 1, sm: 2 },
+        width: { xs: 48, sm: 56 },
+        height: { xs: 48, sm: 56 },
+        borderRadius: { xs: 1.5, sm: 2 },
+        bgcolor: theme.palette.primary.main,
+        color: '#fff',
+        fontSize: { xs: '1.2rem', sm: '1.4rem' },
+        flexShrink: 0,
+        '&:hover': {
+          bgcolor: theme.palette.primary.dark,
+        },
+      }}
+    >
+      ☰
+    </IconButton>
+  </Box>
+</Box>
+
+
 
       {/* Title Section - Enhanced Responsive */}
       <Box mb={{ xs: 3, sm: 4 }} textAlign={{ xs: 'center', sm: 'left' }}>

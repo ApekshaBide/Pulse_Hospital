@@ -1,3 +1,5 @@
+// src/utils/axios.js
+
 import axios from 'axios';
 
 import { CONFIG } from 'src/config-global';
@@ -55,4 +57,19 @@ export const endpoints = {
     details: '/api/product/details',
     search: '/api/product/search',
   },
+
+  diagnostics: {
+    list: '/api/diagnostics/list',
+    details: '/api/diagnostics/details',
+    create: '/api/diagnostics/create',
+    update: '/api/diagnostics/update',
+    delete: '/api/diagnostics/delete',
+  },
+  diagnostics_test: {
+    list: '/api/diagnostics/test/list',
+    details: '/api/diagnostics/test/details',
+    create: '/api/diagnostics/test/create',
+    update: '/api/diagnostics/test/update',
+    delete: '/api/diagnostics/test/delete',
+  }
 };
