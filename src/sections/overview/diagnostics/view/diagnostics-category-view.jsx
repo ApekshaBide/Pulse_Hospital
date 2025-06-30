@@ -18,6 +18,9 @@ import Alert from '@mui/material/Alert';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Skeleton from '@mui/material/Skeleton';
+import Fab from '@mui/material/Fab';
+import Badge from '@mui/material/Badge';
+import Snackbar from '@mui/material/Snackbar';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -30,6 +33,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Label } from 'src/components/label';
+import { CartDrawer } from 'src/components/cart-drawer/cart-drawer';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +42,9 @@ export function DiagnosticsCategoryView() {
   const { categoryId } = useParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [addingToCart, setAddingToCart] = useState({});
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
 
   const {
     categoryDetail,
@@ -48,6 +55,9 @@ export function DiagnosticsCategoryView() {
 
   const { cart, cartLoading } = useCart();
   const { addItemToCart } = useDiagnosticsActions();
+
+  // Calculate total cart items
+  const cartItemsCount = cart?.items?.reduce((total, item) => total + (item.quantity || 0), 0) || 0;
 
   // Filter tests based on search query
   const filteredTests = (categoryDetail?.tests || []).filter(test =>
@@ -66,10 +76,12 @@ export function DiagnosticsCategoryView() {
 
     try {
       await addItemToCart(cart.id, test.id, 1);
-      // Show success message or notification here
+      setSnackbarMessage(`${test.name} added to cart!`);
+      setSnackbarOpen(true);
     } catch (error) {
       console.error('Error adding to cart:', error);
-      // Show error message here
+      setSnackbarMessage('Failed to add item to cart');
+      setSnackbarOpen(true);
     } finally {
       setAddingToCart(prev => ({ ...prev, [test.id]: false }));
     }
@@ -78,6 +90,18 @@ export function DiagnosticsCategoryView() {
   const handleBackToCategories = useCallback(() => {
     router.push(paths.dashboard.diagnostics.root);
   }, [router]);
+
+  const handleCartClick = useCallback(() => {
+    setCartDrawerOpen(true);
+  }, []);
+
+  const handleCartDrawerClose = useCallback(() => {
+    setCartDrawerOpen(false);
+  }, []);
+
+  const handleCloseSnackbar = useCallback(() => {
+    setSnackbarOpen(false);
+  }, []);
 
   // Loading state
   if (categoryDetailLoading) {
@@ -254,6 +278,52 @@ export function DiagnosticsCategoryView() {
             </CardContent>
           </Card>
         )}
+
+        {/* Floating Cart Icon */}
+        {cartItemsCount > 0 && (
+          <Fab
+            color="primary"
+            onClick={handleCartClick}
+            sx={{
+              position: 'fixed',
+              bottom: 24,
+              right: 24,
+              zIndex: 1000,
+            }}
+          >
+            <Badge
+              badgeContent={cartItemsCount}
+              color="error"
+              max={99}
+              sx={{
+                '& .MuiBadge-badge': {
+                  fontSize: '0.75rem',
+                  height: 20,
+                  minWidth: 20,
+                }
+              }}
+            >
+              <Iconify icon="solar:cart-bold" width={24} />
+            </Badge>
+          </Fab>
+        )}
+
+        {/* Cart Drawer */}
+        <CartDrawer
+          open={cartDrawerOpen}
+          onClose={handleCartDrawerClose}
+          cart={cart}
+          cartLoading={cartLoading}
+        />
+
+        {/* Success/Error Snackbar */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseSnackbar}
+          message={snackbarMessage}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        />
       </Container>
     </DashboardContent>
   );

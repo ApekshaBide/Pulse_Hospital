@@ -127,8 +127,7 @@ export const paths = {
       category: (id) => `/dashboard/diagnostics/category/${id}`,
       test: (id) => `/dashboard/diagnostics/test/${id}`,
       package: (id) => `/dashboard/diagnostics/package/${id}`,
-      cart: '/dashboard/diagnostics/cart',
-      booking: '/dashboard/diagnostics/booking',
+      cart: '/dashboard/diagnostics/cart'
     },
     general: {
       app: `${ROOTS.DASHBOARD}/app`,

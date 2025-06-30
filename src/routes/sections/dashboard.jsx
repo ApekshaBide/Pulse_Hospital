@@ -17,7 +17,7 @@ const DiagnosticsOverviewPage = lazy(() => import('src/pages/dashboard/diagnosti
 const DiagnosticsCategoryPage = lazy(() => import('src/pages/dashboard/diagnostics/category'));
 const DiagnosticsTestPage = lazy(() => import('src/pages/dashboard/diagnostics/test'));
 const DiagnosticsPackagePage = lazy(() => import('src/pages/dashboard/diagnostics/package'));
- const DiagnosticsCartPage = lazy(() => import('src/pages/dashboard/diagnostics/cart'));
+const DiagnosticsCartPage = lazy(() => import('src/pages/dashboard/diagnostics/cart'));
 
 import { AuthGuard } from 'src/auth/guard';
 

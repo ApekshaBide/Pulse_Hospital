@@ -122,48 +122,6 @@ export function DiagnosticsSearchSection({ onSearch }) {
             </Stack>
           </Box>
 
-          {/* Quick Actions */}
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={2}
-            divider={
-              <Box
-                sx={{
-                  display: { xs: 'none', sm: 'block' },
-                  width: 1,
-                  height: 24,
-                  bgcolor: 'divider'
-                }}
-              />
-            }
-          >
-            <Button
-              variant="text"
-              startIcon={<Iconify icon="solar:home-bold" />}
-              size="small"
-              sx={{ justifyContent: 'flex-start' }}
-            >
-              Home Collection Available
-            </Button>
-
-            <Button
-              variant="text"
-              startIcon={<Iconify icon="solar:clock-circle-bold" />}
-              size="small"
-              sx={{ justifyContent: 'flex-start' }}
-            >
-              Same Day Reports
-            </Button>
-
-            <Button
-              variant="text"
-              startIcon={<Iconify icon="solar:shield-check-bold" />}
-              size="small"
-              sx={{ justifyContent: 'flex-start' }}
-            >
-              NABL Certified
-            </Button>
-          </Stack>
         </Stack>
       </CardContent>
     </Card>
