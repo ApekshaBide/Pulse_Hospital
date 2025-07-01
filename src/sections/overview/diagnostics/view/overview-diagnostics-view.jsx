@@ -22,14 +22,14 @@ import { DiagnosticsConfigForm } from '../diagnostics-config-form';
 import { DiagnosticsSearchSection } from '../diagnostics-search-section';
 import { DiagnosticsHealthPackages } from '../diagnostics-health-package';
 import {
-  DiagnosticsEmptyState,
-  DiagnosticsErrorState,
-  DiagnosticsLoadingState
+   DiagnosticsFeaturedCategories,
+   DiagnosticsAllCategories
+ } from '../dignostics-categories-sections';
+ import {
+   DiagnosticsEmptyState,
+   DiagnosticsErrorState,
+   DiagnosticsLoadingState
 } from '../diagnostics-empty-states';
-import {
-  DiagnosticsFeaturedCategories,
-  DiagnosticsAllCategories
-} from '../dignostics-categories-sections'; // eslint-disable-line import/extensions
 
 // ----------------------------------------------------------------------
 

@@ -1,11 +1,11 @@
 // src/components/cart-drawer/cart-drawer.jsx
 
-import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
+import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -215,9 +215,21 @@ export function CartDrawer({ open, onClose, cart, cartLoading }) {
 CartDrawer.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  cart: PropTypes.object,
+  cart: PropTypes.shape({
+    id: PropTypes.string,
+    total: PropTypes.number,
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string,
+        quantity: PropTypes.number,
+        price: PropTypes.number
+      })
+    )
+  }),
   cartLoading: PropTypes.bool,
 };
+
 
 // ----------------------------------------------------------------------
 

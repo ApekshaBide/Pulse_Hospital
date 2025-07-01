@@ -1,14 +1,14 @@
 // src/hooks/use-diagnostics.js
 
-import { useMemo } from 'react';
 import useSWR from 'swr';
+import { useMemo } from 'react';
 
 import {
   fetchDiagnosticsConfig,
   createDiagnosticsConfig,
   updateDiagnosticsConfig,
-  fetchDiagnosticsCategories,
   fetchCategoryDetail,
+  fetchDiagnosticsCategories,
   fetchTestDetail,
   fetchPopularTests,
   fetchTestsByCategory,

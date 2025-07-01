@@ -1,7 +1,7 @@
 // src/sections/overview/diagnostics/view/diagnostics-test-detail-view.jsx
 
-import { useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';

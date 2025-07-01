@@ -4,7 +4,8 @@ import { Outlet } from 'react-router-dom';
 import { CONFIG } from 'src/config-global';
 import { DashboardLayout } from 'src/layouts/dashboard';
 
-import { LoadingScreen } from 'src/components/loading-screen';;
+import { LoadingScreen } from 'src/components/loading-screen';
+import { AuthGuard } from 'src/auth/guard';
 
 import { OverviewCovidView } from 'src/sections/overview/covid/view';
 import { OverviewPharmacyView } from 'src/sections/overview/pharmacy/view';
@@ -19,9 +20,17 @@ const DiagnosticsTestPage = lazy(() => import('src/pages/dashboard/diagnostics/t
 const DiagnosticsPackagePage = lazy(() => import('src/pages/dashboard/diagnostics/package'));
 const DiagnosticsCartPage = lazy(() => import('src/pages/dashboard/diagnostics/cart'));
 
-import { AuthGuard } from 'src/auth/guard';
-
-
+const PharmacyOverviewPage = lazy(() => import('src/pages/dashboard/pharmacy/index.js'));
+const PharmacyCategoriesPage = lazy(() => import('src/pages/dashboard/pharmacy/categories'));
+const PharmacyCategoryPage = lazy(() => import('src/pages/dashboard/pharmacy/category'));
+const PharmacyProductsPage = lazy(() => import('src/pages/dashboard/pharmacy/products'));
+const PharmacyProductPage = lazy(() => import('src/pages/dashboard/pharmacy/products'));
+const PharmacyCartPage = lazy(() => import('src/pages/dashboard/pharmacy/cart'));
+const PharmacyOrdersPage = lazy(() => import('src/pages/dashboard/pharmacy/orders'));
+const PharmacyOrderPage = lazy(() => import('src/pages/dashboard/pharmacy/order'));
+const PharmacyInventoryPage = lazy(() => import('src/pages/dashboard/pharmacy/inventory'));
+const PharmacyConfigurationPage = lazy(() => import('src/pages/dashboard/pharmacy/configuration'));
+const PharmacyReportsPage = lazy(() => import('src/pages/dashboard/pharmacy/reports'));
 
 // Overview
 const IndexPage = lazy(() => import('src/pages/dashboard'));
@@ -117,6 +126,23 @@ export const dashboardRoutes = [
           { path: 'test/:testId', element: <DiagnosticsTestPage /> },
           { path: 'package/:packageId', element: <DiagnosticsPackagePage /> },
           { path: 'cart', element: <DiagnosticsCartPage /> },
+        ],
+      },
+       {
+        path: 'pharmacy',
+        children: [
+          { element: <OverviewPharmacyView />, index: true },
+          { path: 'overview', element: <PharmacyOverviewPage /> },
+          { path: 'categories', element: <PharmacyCategoriesPage /> },
+          { path: 'category/:categoryId', element: <PharmacyCategoryPage /> },
+          { path: 'products', element: <PharmacyProductsPage /> },
+          { path: 'product/:productId', element: <PharmacyProductPage /> },
+          { path: 'cart', element: <PharmacyCartPage /> },
+          { path: 'orders', element: <PharmacyOrdersPage /> },
+          { path: 'order/:orderId', element: <PharmacyOrderPage /> },
+          { path: 'inventory', element: <PharmacyInventoryPage /> },
+          { path: 'configuration', element: <PharmacyConfigurationPage /> },
+          { path: 'reports', element: <PharmacyReportsPage /> },
         ],
       },
       {

@@ -1,1 +1,1 @@
-export * from './overview-pharmacy-view';
+export { OverviewPharmacyView } from './overview-pharmacy-view';

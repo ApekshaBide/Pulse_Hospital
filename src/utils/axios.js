@@ -71,5 +71,12 @@ export const endpoints = {
     create: '/api/diagnostics/test/create',
     update: '/api/diagnostics/test/update',
     delete: '/api/diagnostics/test/delete',
-  }
-};
+  },
+  pharmacy: {
+    list: '/api/pharmacy/list',
+    details: '/api/pharmacy/details',
+    create: '/api/pharmacy/create',
+    update: '/api/pharmacy/update',
+    delete: '/api/pharmacy/delete',
+  },
+}

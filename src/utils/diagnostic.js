@@ -1,6 +1,6 @@
 // src/utils/diagnostic.js
 
-import axiosInstance, { endpoints } from 'src/utils/axios';
+import { endpoints } from 'src/utils/axios';
 
 // Mock data for diagnostics configuration
 export const mockDiagnosticsConfig = {

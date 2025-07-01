@@ -1,7 +1,7 @@
 // src/sections/overview/diagnostics/view/diagnostics-category-view.jsx
 
-import { useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -25,8 +25,7 @@ import Snackbar from '@mui/material/Snackbar';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useCategoryDetail, useDiagnosticsActions } from 'src/hooks/use-diagnostics';
-import { useCart } from 'src/hooks/use-diagnostics';
+import { useCategoryDetail, useDiagnosticsActions, useCart } from 'src/hooks/use-diagnostics';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 

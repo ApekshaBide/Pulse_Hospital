@@ -1,6 +1,7 @@
+// src/sections/overview/pharmacy/view/overview-pharmacy-view.jsx
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
@@ -21,12 +22,12 @@ import CardContent from '@mui/material/CardContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-
 import { useBoolean } from 'src/hooks/use-boolean';
-
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { toast } from 'src/components/snackbar';
@@ -34,6 +35,9 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { Form, Field} from 'src/components/hook-form';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
+// Import our custom hooks
+import { usePharmacyManager, useCategoryDetails } from 'src/hooks/use-pharmacy';
 
 // ----------------------------------------------------------------------
 
@@ -44,245 +48,239 @@ const PharmacyConfigSchema = zod.object({
   address: zod.string().min(1, { message: 'Address is required!' }),
   phone: zod.string().min(1, { message: 'Phone number is required!' }),
   email: zod.string().email({ message: 'Invalid email address!' }),
-  operatingHours: zod.string().min(1, { message: 'Operating hours are required!' }),
-  emergencyContact: zod.string().min(1, { message: 'Emergency contact is required!' }),
-  licenseNumber: zod.string().min(1, { message: 'License number is required!' }),
-  // Optional fields
+  operating_hours: zod.string().min(1, { message: 'Operating hours are required!' }),
+  emergency_contact: zod.string().min(1, { message: 'Emergency contact is required!' }),
+  license_number: zod.string().min(1, { message: 'License number is required!' }),
   website: zod.string().optional(),
-  specialServices: zod.string().optional(),
+  special_services: zod.string().optional(),
 });
-
-// Mock data for current pharmacy configuration
-const mockPharmacyConfig = {
-  id: '1',
-  name: 'HealthCare Pharmacy',
-  description: 'Your trusted neighborhood pharmacy providing quality medicines and healthcare services 24/7.',
-  address: '123 Main Street, Downtown, City 12345',
-  phone: '+1 (555) 123-4567',
-  email: 'info@healthcarepharmacy.com',
-  operatingHours: '24/7 - Always Open',
-  emergencyContact: '+1 (555) 999-HELP',
-  licenseNumber: 'PH-2024-001',
-  website: 'https://healthcarepharmacy.com',
-  specialServices: 'Home delivery, Prescription consultation, Health checkups',
-  isActive: true,
-  lastUpdated: '2024-06-01',
-};
-
-// Categories for pharmacy services
-const pharmacyCategories = [
-  { id: 1, name: 'Pain Relief', icon: '💊', color: '#2196F3', bgColor: '#E3F2FD', count: 45 },
-  { id: 2, name: 'Cold & Flu', icon: '🤧', color: '#4CAF50', bgColor: '#E8F5E8', count: 32 },
-  { id: 3, name: 'Vitamins', icon: '⚡', color: '#FF9800', bgColor: '#FFF3E0', count: 67 },
-  { id: 4, name: 'Antibiotics', icon: '🩺', color: '#9C27B0', bgColor: '#F3E5F5', count: 28 },
-  { id: 5, name: 'Digestive Health', icon: '🍽️', color: '#F44336', bgColor: '#FFEBEE', count: 23 },
-  { id: 6, name: 'Heart Care', icon: '❤️', color: '#00BCD4', bgColor: '#E0F2F1', count: 19 },
-];
 
 // ----------------------------------------------------------------------
 
-// Pharmacy Configuration Preview Component
-function PharmacyConfigPreview({
-  name,
-  description,
-  address,
-  phone,
-  email,
-  operatingHours,
-  emergencyContact,
-  licenseNumber,
-  website,
-  specialServices,
-  open,
-  isValid,
-  onClose,
-  onSubmit,
-  isSubmitting,
-}) {
-  const hasContent = name || description || address || phone || email;
+// Category Detail Dialog Component
+function CategoryDetailDialog({ category, open, onClose }) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const { categoryDetails, loading: detailsLoading } = useCategoryDetails(category?.id);
 
-  const renderHeader = (
-    <Stack spacing={2} sx={{ p: 3, pb: 2 }}>
-      <Stack direction="row" alignItems="center" spacing={2}>
-        <Box
-          sx={{
-            width: 48,
-            height: 48,
-            borderRadius: 2,
-            bgcolor: 'primary.main',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 24,
-            color: 'white',
-          }}
-        >
-          🏥
-        </Box>
-        <Box>
-          <Typography variant="h4" component="h1">
-            {name || 'Pharmacy Name'}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            License: {licenseNumber || 'Not specified'}
-          </Typography>
-        </Box>
-      </Stack>
+  const handleViewProducts = useCallback(async () => {
+    setLoading(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      {description && (
-        <Box sx={{ p: 2, bgcolor: 'background.neutral', borderRadius: 1 }}>
-          <Typography variant="body1">
-            {description}
-          </Typography>
-        </Box>
-      )}
-    </Stack>
-  );
+      const categoryPath = `${paths.dashboard.root}/pharmacy/category/${category.id}/products`;
 
-  const renderContent = (
-    <Stack spacing={3} sx={{ p: 3, pt: 1 }}>
-      {hasContent ? (
-        <Grid container spacing={3}>
-          <Grid xs={12} md={6}>
-            <Card sx={{ p: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                Contact Information
-              </Typography>
-              <Stack spacing={1}>
-                <Typography variant="body2">
-                  <strong>Address:</strong> {address || 'Not specified'}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Phone:</strong> {phone || 'Not specified'}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Email:</strong> {email || 'Not specified'}
-                </Typography>
-                {website && (
-                  <Typography variant="body2">
-                    <strong>Website:</strong> {website}
-                  </Typography>
-                )}
-              </Stack>
-            </Card>
-          </Grid>
+      if (router?.push) {
+        router.push(categoryPath);
+      } else {
+        // Show mock navigation
+        toast.success(`Navigating to ${category.name} products...`);
+        console.log('Navigate to:', categoryPath);
+      }
+      onClose();
+    } catch (error) {
+      toast.error('Navigation failed');
+    } finally {
+      setLoading(false);
+    }
+  }, [category, router, onClose]);
 
-          <Grid xs={12} md={6}>
-            <Card sx={{ p: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                Operating Details
-              </Typography>
-              <Stack spacing={1}>
-                <Typography variant="body2">
-                  <strong>Hours:</strong> {operatingHours || 'Not specified'}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Emergency:</strong> {emergencyContact || 'Not specified'}
-                </Typography>
-                {specialServices && (
-                  <Typography variant="body2">
-                    <strong>Services:</strong> {specialServices}
-                  </Typography>
-                )}
-              </Stack>
-            </Card>
-          </Grid>
-        </Grid>
-      ) : (
-        <Box
-          sx={{
-            py: 10,
-            display: 'flex',
-            textAlign: 'center',
-            alignItems: 'center',
-            flexDirection: 'column',
-          }}
-        >
-          <Iconify icon="solar:hospital-bold" width={48} sx={{ color: 'text.disabled', mb: 2 }} />
-          <Typography variant="h6" color="text.disabled">
-            No configuration available
-          </Typography>
-          <Typography variant="body2" color="text.disabled">
-            Fill in the pharmacy details to see the preview
-          </Typography>
-        </Box>
-      )}
-    </Stack>
-  );
+  const handleViewSubcategories = useCallback(async () => {
+    setLoading(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-  const renderActions = (
-    <DialogActions sx={{ p: 3 }}>
-      <Stack direction="row" spacing={2} sx={{ width: 1 }}>
-        <Button
-          fullWidth
-          color="inherit"
-          variant="outlined"
-          startIcon={<Iconify icon="solar:close-circle-bold" />}
-          onClick={onClose}
-        >
-          Close
-        </Button>
+      const subcategoryPath = `${paths.dashboard.root}/pharmacy/category/${category.id}/subcategories`;
 
-        <LoadingButton
-          fullWidth
-          color="primary"
-          variant="contained"
-          startIcon={<Iconify icon="solar:check-circle-bold" />}
-          onClick={onSubmit}
-          loading={isSubmitting}
-          disabled={!isValid}
-        >
-          Save Configuration
-        </LoadingButton>
-      </Stack>
-    </DialogActions>
-  );
+      if (router?.push) {
+        router.push(subcategoryPath);
+      } else {
+        toast.success(`Viewing ${category.name} subcategories...`);
+        console.log('Navigate to:', subcategoryPath);
+      }
+      onClose();
+    } catch (error) {
+      toast.error('Navigation failed');
+    } finally {
+      setLoading(false);
+    }
+  }, [category, router, onClose]);
+
+  if (!category) return null;
+
+  const displayCategory = categoryDetails || category;
 
   return (
     <Dialog
-      fullScreen
       open={open}
       onClose={onClose}
+      maxWidth="sm"
+      fullWidth
       PaperProps={{
-        sx: { bgcolor: 'background.default' }
+        sx: { borderRadius: 2 }
       }}
     >
-      <Box sx={{ height: 1, display: 'flex', flexDirection: 'column' }}>
-        <DialogContent sx={{ flex: 1, p: 0, overflow: 'hidden' }}>
-          <Scrollbar sx={{ height: 1 }}>
-            {hasContent ? (
-              <>
-                {renderHeader}
-                <Divider />
-                {renderContent}
-              </>
-            ) : (
+      <DialogContent sx={{ p: 0 }}>
+        {detailsLoading ? (
+          <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+            <CircularProgress size={40} />
+          </Box>
+        ) : (
+          <Box sx={{ p: 3 }}>
+            <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 3 }}>
               <Box
+                component="img"
+                src={displayCategory.icon}
+                alt={displayCategory.name}
                 sx={{
-                  py: 10,
-                  display: 'flex',
-                  textAlign: 'center',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  height: '100%',
-                  justifyContent: 'center',
+                  width: 56,
+                  height: 56,
+                  borderRadius: 2,
+                  bgcolor: 'background.neutral',
+                  p: 1,
                 }}
-              >
-                <Iconify icon="solar:hospital-bold" width={64} sx={{ color: 'text.disabled', mb: 3 }} />
-                <Typography variant="h5" color="text.disabled" gutterBottom>
-                  No Preview Available
-                </Typography>
-                <Typography variant="body2" color="text.disabled">
-                  Fill in the form fields to see your pharmacy configuration preview
+              />
+              <Box sx={{ flex: 1 }}>
+                <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.5 }}>
+                  <Typography variant="h5" fontWeight="bold">
+                    {displayCategory.name}
+                  </Typography>
+                  {displayCategory.is_featured && (
+                    <Chip
+                      label="Featured"
+                      size="small"
+                      color="primary"
+                      sx={{ height: 20, fontSize: '0.6rem' }}
+                    />
+                  )}
+                </Stack>
+                <Typography variant="body2" color="text.secondary">
+                  {displayCategory.description}
                 </Typography>
               </Box>
-            )}
-          </Scrollbar>
-        </DialogContent>
+            </Stack>
 
-        <Divider />
-        {renderActions}
-      </Box>
+            <Grid container spacing={2} sx={{ mb: 3 }}>
+              <Grid item xs={4}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    textAlign: 'center',
+                    bgcolor: 'primary.lighter',
+                    border: '1px solid',
+                    borderColor: 'primary.light'
+                  }}
+                >
+                  <Typography variant="h4" color="primary.main" fontWeight="bold">
+                    {displayCategory.product_count}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Products
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={4}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    textAlign: 'center',
+                    bgcolor: 'secondary.lighter',
+                    border: '1px solid',
+                    borderColor: 'secondary.light'
+                  }}
+                >
+                  <Typography variant="h4" color="secondary.main" fontWeight="bold">
+                    {displayCategory.subcategory_count}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Categories
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={4}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    textAlign: 'center',
+                    bgcolor: 'success.lighter',
+                    border: '1px solid',
+                    borderColor: 'success.light'
+                  }}
+                >
+                  <Typography variant="body2" color="success.main" fontWeight="bold">
+                    ₹{displayCategory.min_price}
+                  </Typography>
+                  <Typography variant="body2" color="success.main" fontWeight="bold">
+                    ₹{displayCategory.max_price}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Price Range
+                  </Typography>
+                </Paper>
+              </Grid>
+            </Grid>
+
+            {categoryDetails?.subcategories && categoryDetails.subcategories.length > 0 && (
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Subcategories ({categoryDetails.subcategories.length})
+                </Typography>
+                <Grid container spacing={1}>
+                  {categoryDetails.subcategories.map((subcategory) => (
+                    <Grid item key={subcategory.id}>
+                      <Chip
+                        label={`${subcategory.name} (${subcategory.product_count})`}
+                        size="small"
+                        variant="outlined"
+                        sx={{ fontSize: '0.7rem' }}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            )}
+
+            <Stack direction="row" spacing={1} flexWrap="wrap">
+              <Chip
+                label={`Sort Order: ${displayCategory.sort_order}`}
+                size="small"
+                variant="outlined"
+              />
+              <Chip
+                label={`Updated: ${new Date(displayCategory.updated_at).toLocaleDateString()}`}
+                size="small"
+                variant="outlined"
+              />
+            </Stack>
+          </Box>
+        )}
+      </DialogContent>
+
+      <DialogActions sx={{ p: 3, pt: 0 }}>
+        <Button
+          onClick={onClose}
+          color="inherit"
+          disabled={loading}
+        >
+          Close
+        </Button>
+        <Button
+          onClick={handleViewSubcategories}
+          variant="outlined"
+          startIcon={<Iconify icon="solar:folder-bold" />}
+          disabled={loading}
+        >
+          Subcategories
+        </Button>
+        <LoadingButton
+          onClick={handleViewProducts}
+          variant="contained"
+          startIcon={<Iconify icon="solar:pill-bold" />}
+          loading={loading}
+        >
+          View Products
+        </LoadingButton>
+      </DialogActions>
     </Dialog>
   );
 }
@@ -290,9 +288,9 @@ function PharmacyConfigPreview({
 // ----------------------------------------------------------------------
 
 // Pharmacy Configuration Form Component
-function PharmacyConfigForm({ currentConfig, onSuccess }) {
-  const router = useRouter();
+function PharmacyConfigForm({ currentConfig, onSuccess, loading: formLoading }) {
   const preview = useBoolean();
+  const { config } = usePharmacyManager();
 
   const defaultValues = useMemo(
     () => ({
@@ -301,11 +299,11 @@ function PharmacyConfigForm({ currentConfig, onSuccess }) {
       address: currentConfig?.address || '',
       phone: currentConfig?.phone || '',
       email: currentConfig?.email || '',
-      operatingHours: currentConfig?.operatingHours || '24/7',
-      emergencyContact: currentConfig?.emergencyContact || '',
-      licenseNumber: currentConfig?.licenseNumber || '',
+      operating_hours: currentConfig?.operating_hours || '24/7',
+      emergency_contact: currentConfig?.emergency_contact || '',
+      license_number: currentConfig?.license_number || '',
       website: currentConfig?.website || '',
-      specialServices: currentConfig?.specialServices || '',
+      special_services: currentConfig?.special_services || '',
     }),
     [currentConfig]
   );
@@ -325,30 +323,28 @@ function PharmacyConfigForm({ currentConfig, onSuccess }) {
 
   const values = watch();
 
-  useEffect(() => {
-    if (currentConfig) {
-      reset(defaultValues);
-    }
-  }, [currentConfig, defaultValues, reset]);
-
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
       const submitData = {
         ...data,
-        lastUpdated: new Date().toISOString().split('T')[0],
+        last_updated: new Date().toISOString().split('T')[0],
+        is_active: true,
       };
+
+      if (currentConfig) {
+        await config.updateConfig(submitData);
+      } else {
+        await config.createConfig(submitData);
+      }
 
       reset();
       preview.onFalse();
-      toast.success(currentConfig ? 'Pharmacy configuration updated successfully!' : 'Pharmacy configuration created successfully!');
+
+      toast.success(currentConfig ? 'Pharmacy updated successfully!' : 'Pharmacy created successfully!');
 
       if (onSuccess) {
         onSuccess(submitData);
       }
-
-      console.info('PHARMACY CONFIG DATA', submitData);
     } catch (error) {
       console.error(error);
       toast.error('Something went wrong!');
@@ -359,7 +355,7 @@ function PharmacyConfigForm({ currentConfig, onSuccess }) {
     <Card>
       <CardHeader
         title="Basic Information"
-        subheader="Essential pharmacy details and identification..."
+        subheader="Essential pharmacy details and identification"
         sx={{ mb: 3 }}
       />
 
@@ -369,7 +365,7 @@ function PharmacyConfigForm({ currentConfig, onSuccess }) {
         <Field.Text
           name="name"
           label="Pharmacy Name"
-          placeholder="e.g., HealthCare Pharmacy"
+          placeholder="e.g., HealthCare Plus Pharmacy"
         />
 
         <Field.Text
@@ -382,12 +378,12 @@ function PharmacyConfigForm({ currentConfig, onSuccess }) {
 
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <Field.Text
-            name="licenseNumber"
+            name="license_number"
             label="License Number"
             placeholder="e.g., PH-2024-001"
           />
           <Field.Text
-            name="operatingHours"
+            name="operating_hours"
             label="Operating Hours"
             placeholder="e.g., 24/7, Mon-Fri 9AM-6PM"
           />
@@ -400,7 +396,7 @@ function PharmacyConfigForm({ currentConfig, onSuccess }) {
     <Card>
       <CardHeader
         title="Contact Information"
-        subheader="How customers can reach your pharmacy..."
+        subheader="How customers can reach your pharmacy"
         sx={{ mb: 3 }}
       />
 
@@ -422,7 +418,7 @@ function PharmacyConfigForm({ currentConfig, onSuccess }) {
             placeholder="e.g., +1 (555) 123-4567"
           />
           <Field.Text
-            name="emergencyContact"
+            name="emergency_contact"
             label="Emergency Contact"
             placeholder="e.g., +1 (555) 999-HELP"
           />
@@ -442,7 +438,7 @@ function PharmacyConfigForm({ currentConfig, onSuccess }) {
         </Stack>
 
         <Field.Text
-          name="specialServices"
+          name="special_services"
           label="Special Services (Optional)"
           multiline
           rows={2}
@@ -455,7 +451,7 @@ function PharmacyConfigForm({ currentConfig, onSuccess }) {
   const renderActions = (
     <Box display="flex" alignItems="center" flexWrap="wrap" justifyContent="space-between">
       <FormControlLabel
-        control={<Switch defaultChecked inputProps={{ id: 'active-pharmacy-switch' }} />}
+        control={<Switch defaultChecked />}
         label="Set as Active Configuration"
         sx={{ flexGrow: 1 }}
       />
@@ -475,7 +471,7 @@ function PharmacyConfigForm({ currentConfig, onSuccess }) {
           type="submit"
           variant="contained"
           size="large"
-          loading={isSubmitting}
+          loading={isSubmitting || formLoading || config.loading}
           disabled={!isValid}
         >
           {!currentConfig ? 'Create Configuration' : 'Update Configuration'}
@@ -485,64 +481,38 @@ function PharmacyConfigForm({ currentConfig, onSuccess }) {
   );
 
   return (
-    <>
-      <Form methods={methods} onSubmit={onSubmit}>
-        <Stack spacing={4} sx={{ mx: 'auto', maxWidth: { xs: 720, xl: 880 } }}>
-          {renderBasicInfo}
-          {renderContactInfo}
-          {renderActions}
-        </Stack>
-      </Form>
-
-      <PharmacyConfigPreview
-        isValid={isValid}
-        onSubmit={onSubmit}
-        name={values.name}
-        open={preview.value}
-        description={values.description}
-        onClose={preview.onFalse}
-        isSubmitting={isSubmitting}
-        address={values.address}
-        phone={values.phone}
-        email={values.email}
-        operatingHours={values.operatingHours}
-        emergencyContact={values.emergencyContact}
-        licenseNumber={values.licenseNumber}
-        website={values.website}
-        specialServices={values.specialServices}
-      />
-    </>
+    <Form methods={methods} onSubmit={onSubmit}>
+      <Stack spacing={4} sx={{ mx: 'auto', maxWidth: { xs: 720, xl: 880 } }}>
+        {renderBasicInfo}
+        {renderContactInfo}
+        {renderActions}
+      </Stack>
+    </Form>
   );
 }
 
 // ----------------------------------------------------------------------
 
-// Main Pharmacy Management View Component
+// Main Pharmacy Overview Component
 export function OverviewPharmacyView() {
   const router = useRouter();
-  const [currentConfig, setCurrentConfig] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categoryDetailOpen, setCategoryDetailOpen] = useState(false);
 
-  useEffect(() => {
-    // Simulate API call to fetch current pharmacy configuration
-    const fetchConfig = async () => {
-      try {
-        setLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate delay
-        setCurrentConfig(mockPharmacyConfig);
-      } catch (error) {
-        console.error('Error fetching pharmacy config:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchConfig();
-  }, []);
+  // Use our pharmacy manager hook
+  const {
+    config,
+    categories,
+    cart,
+    isLoading,
+    hasError,
+    isPharmacyReady,
+    dashboardStats
+  } = usePharmacyManager();
 
   const handleCreateNew = () => {
-    setCurrentConfig(null);
+    config.setConfig(null);
     setEditMode(true);
   };
 
@@ -551,7 +521,7 @@ export function OverviewPharmacyView() {
   };
 
   const handleFormSuccess = (data) => {
-    setCurrentConfig(data);
+    config.setConfig(data);
     setEditMode(false);
   };
 
@@ -559,11 +529,47 @@ export function OverviewPharmacyView() {
     setEditMode(false);
   };
 
-  const renderPharmacyHeader = currentConfig && !editMode && (
+  const handleCategoryClick = useCallback((category) => {
+    console.log('Category clicked:', category);
+    setSelectedCategory(category);
+    setCategoryDetailOpen(true);
+  }, []);
+
+  const handleCategoryDetailClose = () => {
+    setCategoryDetailOpen(false);
+    setSelectedCategory(null);
+  };
+
+  const handleAddToCart = () => {
+    try {
+      if (router?.push) {
+        router.push(`${paths.dashboard.root}/pharmacy/cart`);
+      } else {
+        toast.success('Opening cart...');
+      }
+    } catch (error) {
+      toast.info('Cart functionality - Feature coming soon!');
+    }
+  };
+
+  // Color mapping for categories
+  const getCategoryColors = (index) => {
+    const colors = [
+      { bg: 'error.lighter', border: 'error.light', text: 'error.main' },
+      { bg: 'success.lighter', border: 'success.light', text: 'success.main' },
+      { bg: 'info.lighter', border: 'info.light', text: 'info.main' },
+      { bg: 'warning.lighter', border: 'warning.light', text: 'warning.main' },
+      { bg: 'secondary.lighter', border: 'secondary.light', text: 'secondary.main' },
+      { bg: 'primary.lighter', border: 'primary.light', text: 'primary.main' },
+    ];
+    return colors[index % colors.length];
+  };
+
+  const renderPharmacyHeader = config.config && !editMode && (
     <Paper
       sx={{
-        background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
-        color: 'white',
+        background: (theme) => `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+        color: 'primary.contrastText',
         p: { xs: 3, md: 4 },
         borderRadius: 3,
         mb: 4,
@@ -598,154 +604,309 @@ export function OverviewPharmacyView() {
         </Box>
         <Box sx={{ flex: 1 }}>
           <Typography variant="h4" fontWeight="bold" gutterBottom>
-            {currentConfig.name}
+            {config.config.name}
           </Typography>
           <Typography variant="body1" sx={{ opacity: 0.9, mb: 2 }}>
-            {currentConfig.description}
+            {config.config.description}
           </Typography>
           <Stack direction="row" spacing={2} flexWrap="wrap">
             <Chip
-              label={currentConfig.operatingHours}
-              sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
+              label={config.config.operating_hours}
+              sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'inherit' }}
             />
             <Chip
-              label={`License: ${currentConfig.licenseNumber}`}
-              sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
+              label={`License: ${config.config.license_number}`}
+              sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'inherit' }}
             />
+            {config.config.is_active && (
+              <Chip
+                label="Active"
+                sx={{ bgcolor: 'success.main', color: 'success.contrastText' }}
+              />
+            )}
           </Stack>
         </Box>
-        <Button
-          variant="outlined"
-          startIcon={<Iconify icon="solar:pen-bold" />}
-          onClick={handleEdit}
-          sx={{ color: 'white', borderColor: 'rgba(255,255,255,0.5)' }}
-        >
-          Edit
-        </Button>
+        <Stack direction="row" spacing={1}>
+          <Button
+            variant="outlined"
+            startIcon={<Iconify icon="solar:cart-plus-bold" />}
+            onClick={handleAddToCart}
+            sx={{
+              color: 'inherit',
+              borderColor: 'rgba(255,255,255,0.5)',
+              '&:hover': {
+                borderColor: 'rgba(255,255,255,0.8)',
+                bgcolor: 'rgba(255,255,255,0.1)'
+              }
+            }}
+          >
+            Cart ({cart.itemCount})
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<Iconify icon="solar:pen-bold" />}
+            onClick={handleEdit}
+            sx={{
+              color: 'inherit',
+              borderColor: 'rgba(255,255,255,0.5)',
+              '&:hover': {
+                borderColor: 'rgba(255,255,255,0.8)',
+                bgcolor: 'rgba(255,255,255,0.1)'
+              }
+            }}
+          >
+            Edit
+          </Button>
+        </Stack>
       </Stack>
     </Paper>
   );
 
-  const renderCategories = currentConfig && !editMode && (
+  const renderDashboardStats = config.config && !editMode && (
+    <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid item xs={6} sm={3}>
+        <Card sx={{ textAlign: 'center', py: 3 }}>
+          <Typography variant="h3" color="primary.main" fontWeight="bold">
+            {dashboardStats.totalCategories}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Total Categories
+          </Typography>
+        </Card>
+      </Grid>
+      <Grid item xs={6} sm={3}>
+        <Card sx={{ textAlign: 'center', py: 3 }}>
+          <Typography variant="h3" color="success.main" fontWeight="bold">
+            {dashboardStats.totalProducts}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Total Products
+          </Typography>
+        </Card>
+      </Grid>
+      <Grid item xs={6} sm={3}>
+        <Card sx={{ textAlign: 'center', py: 3 }}>
+          <Typography variant="h3" color="info.main" fontWeight="bold">
+            {dashboardStats.cartItems}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Cart Items
+          </Typography>
+        </Card>
+      </Grid>
+      <Grid item xs={6} sm={3}>
+        <Card sx={{ textAlign: 'center', py: 3 }}>
+          <Typography variant="h3" color="warning.main" fontWeight="bold">
+            ₹{dashboardStats.cartValue}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Cart Value
+          </Typography>
+        </Card>
+      </Grid>
+    </Grid>
+  );
+
+  const renderCategories = config.config && !editMode && categories.categories.length > 0 && (
     <Card sx={{ mb: 4 }}>
       <CardHeader
         title="Pharmacy Categories"
-        subheader="Available medicine categories and inventory count"
+        subheader={`${categories.categoriesStats.total} categories available with ${categories.categoriesStats.totalProducts} total products`}
+        action={
+          <Stack direction="row" spacing={1}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => categories.updateFilters({ is_featured: !categories.filters.is_featured })}
+            >
+              {categories.filters.is_featured ? 'Show All' : 'Featured Only'}
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<Iconify icon="solar:add-circle-bold" />}
+              onClick={() => toast.info('Add category feature coming soon!')}
+            >
+              Add Category
+            </Button>
+          </Stack>
+        }
       />
-<CardContent
-  sx={{
-    mt: { xs: 2, sm: 3, md: 4 },
-    mx: { xs: 1, sm: 2, md: 3, lg: 4 },
-  }}
->
-  <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }} alignItems="stretch">
-    {pharmacyCategories.map((category) => (
-      <Grid
-        item
-        xs={6}
-        sm={4}
-        md={2}
-        key={category.id}
-        sx={{
-          px: { xs: 0.5, sm: 1, md: 1.5 },
-          display: 'flex',
-        }}
-      >
-        <Card
-          onClick={() => console.log('Category clicked:', category.name)}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexGrow: 1,
-            p: { xs: 1.5, sm: 2, md: 2.5 },
-            textAlign: 'center',
-            borderRadius: { xs: 2, md: 3 },
-            cursor: 'pointer',
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-            height: '100%',
-            width: '100%',
-            willChange: 'transform',
-            '&:hover': {
-              transform: 'translateY(-4px)',
-              boxShadow: (theme) => theme.shadows[6],
-              '& .category-icon': {
-                transform: 'scale(1.15) rotate(3deg)',
-              },
-              '& .category-title': {
-                color: category.color,
-              },
-              '& .category-chip': {
-                transform: 'scale(1.1)',
-              },
-            },
-            '&:active': {
-              transform: 'translateY(-2px)',
-              transition: 'transform 0.1s ease',
-            },
-          }}
-        >
-          <Box
-            className="category-icon"
-            sx={{
-              width: { xs: 40, sm: 45, md: 50, lg: 55 },
-              height: { xs: 40, sm: 45, md: 50, lg: 55 },
-              borderRadius: { xs: 1.5, md: 2 },
-              bgcolor: category.bgColor,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              mb: { xs: 1, sm: 1.25, md: 1.5 },
-              fontSize: { xs: 20, sm: 22, md: 24, lg: 26 },
-              transition: 'transform 0.3s ease',
-            }}
-          >
-            {category.icon}
+      <CardContent>
+        {categories.loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+            <CircularProgress />
           </Box>
-          <Typography
-            className="category-title"
-            variant="subtitle2"
-            fontWeight={600}
-            gutterBottom
-            sx={{
-              fontSize: { xs: '0.75rem', sm: '0.8rem', md: '0.85rem' },
-              lineHeight: 1.2,
-              transition: 'color 0.3s ease',
-            }}
-          >
-            {category.name}
-          </Typography>
-          <Chip
-            className="category-chip"
-            label={`${category.count} items`}
-            size="small"
-            sx={{
-              bgcolor: category.bgColor,
-              color: category.color,
-              fontSize: { xs: '0.6rem', sm: '0.65rem', md: '0.7rem' },
-              height: { xs: 20, md: 24 },
-              mt: 1,
-              transition: 'transform 0.3s ease',
-            }}
-          />
-        </Card>
-      </Grid>
-    ))}
-  </Grid>
-</CardContent>
+        ) : (
+          <Grid container spacing={3}>
+            {categories.categories.map((category, index) => {
+              const colors = getCategoryColors(index);
 
+              return (
+                <Grid item xs={6} sm={4} md={2} key={category.id}>
+                  <Card
+                    onClick={() => handleCategoryClick(category)}
+                    sx={{
+                      height: '100%',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      position: 'relative',
+                      border: '1px solid',
+                      borderColor: 'divider',
+                      '&:hover': {
+                        transform: 'translateY(-8px)',
+                        boxShadow: (theme) => theme.shadows[12],
+                        borderColor: colors.border,
+                        '& .category-icon': {
+                          transform: 'scale(1.1)',
+                        },
+                        '& .category-title': {
+                          color: colors.text,
+                        },
+                      },
+                    }}
+                  >
+                    {category.is_featured && (
+                      <Chip
+                        label="Featured"
+                        size="small"
+                        sx={{
+                          position: 'absolute',
+                          top: 8,
+                          right: 8,
+                          bgcolor: 'warning.main',
+                          color: 'warning.contrastText',
+                          fontSize: '0.6rem',
+                          height: 20,
+                          zIndex: 1,
+                        }}
+                      />
+                    )}
 
+                    <CardContent sx={{ textAlign: 'center', p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                      <Box
+                        component="img"
+                        src={category.icon}
+                        alt={category.name}
+                        className="category-icon"
+                        sx={{
+                          width: 48,
+                          height: 48,
+                          borderRadius: 1.5,
+                          bgcolor: colors.bg,
+                          border: '1px solid',
+                          borderColor: colors.border,
+                          mx: 'auto',
+                          mb: 1.5,
+                          p: 1,
+                          transition: 'transform 0.3s ease',
+                        }}
+                      />
 
+                      <Typography
+                        className="category-title"
+                        variant="subtitle2"
+                        fontWeight="bold"
+                        gutterBottom
+                        sx={{
+                          fontSize: '0.8rem',
+                          lineHeight: 1.2,
+                          transition: 'color 0.3s ease',
+                          minHeight: 32,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flex: 1,
+                        }}
+                      >
+                        {category.name}
+                      </Typography>
+
+                      <Stack spacing={0.5} alignItems="center" sx={{ mt: 'auto' }}>
+                        <Chip
+                          label={`${category.product_count} items`}
+                          size="small"
+                          sx={{
+                            bgcolor: colors.bg,
+                            color: colors.text,
+                            fontSize: '0.65rem',
+                            height: 20,
+                            border: '1px solid',
+                            borderColor: colors.border,
+                          }}
+                        />
+
+                        {category.subcategory_count > 0 && (
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ fontSize: '0.6rem' }}
+                          >
+                            {category.subcategory_count} subcategories
+                          </Typography>
+                        )}
+
+                        <Typography
+                          variant="caption"
+                          color="success.main"
+                          sx={{ fontSize: '0.6rem', fontWeight: 'bold' }}
+                        >
+                          ₹{category.min_price} - ₹{category.max_price}
+                        </Typography>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              );
+            })}
+          </Grid>
+        )}
+      </CardContent>
     </Card>
   );
 
-  if (loading) {
+  // Error state
+  if (hasError && !config.config) {
     return (
       <DashboardContent>
         <Container maxWidth="xl">
           <Box display="flex" justifyContent="center" alignItems="center" minHeight={400}>
-            <Typography>Loading pharmacy configuration...</Typography>
+            <Card sx={{ p: 4, textAlign: 'center', maxWidth: 400 }}>
+              <Iconify icon="solar:wifi-router-minimalistic-bold" width={64} sx={{ color: 'error.main', mb: 2 }} />
+              <Typography variant="h6" color="error" gutterBottom>
+                Connection Error
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                {config.error || categories.error || 'Failed to load pharmacy data'}
+              </Typography>
+              <Button
+                variant="contained"
+                onClick={() => window.location.reload()}
+                startIcon={<Iconify icon="solar:refresh-bold" />}
+              >
+                Retry
+              </Button>
+            </Card>
+          </Box>
+        </Container>
+      </DashboardContent>
+    );
+  }
+
+  // Loading state
+  if (isLoading && !config.config) {
+    return (
+      <DashboardContent>
+        <Container maxWidth="xl">
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight={400}>
+            <Stack spacing={3} alignItems="center">
+              <CircularProgress size={40} thickness={4} />
+              <Typography variant="h6" color="text.secondary">
+                Loading pharmacy configuration...
+              </Typography>
+              <Typography variant="body2" color="text.disabled">
+                Please wait while we fetch your pharmacy data
+              </Typography>
+            </Stack>
           </Box>
         </Container>
       </DashboardContent>
@@ -758,33 +919,67 @@ export function OverviewPharmacyView() {
         <CustomBreadcrumbs
           heading="Pharmacy Management"
           links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Healthcare', href: paths.dashboard.healthcare?.root },
+            { name: 'Dashboard', href: paths.dashboard?.root || '/dashboard' },
             { name: 'Pharmacy' },
           ]}
           action={
             !editMode && (
-              <Button
-                variant="contained"
-                startIcon={<Iconify icon="mingcute:add-line" />}
-                onClick={handleCreateNew}
-              >
-                Configure Pharmacy
-              </Button>
+              <Stack direction="row" spacing={1}>
+                <Button
+                  variant="outlined"
+                  startIcon={<Iconify icon="solar:cart-bold" />}
+                  onClick={handleAddToCart}
+                >
+                  View Cart ({cart.itemCount})
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={<Iconify icon="mingcute:add-line" />}
+                  onClick={handleCreateNew}
+                >
+                  Configure Pharmacy
+                </Button>
+              </Stack>
             )
           }
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
+        {/* Display success message if configuration was just saved */}
+        {config.config && !editMode && (
+          <Alert
+            severity="success"
+            sx={{ mb: 3 }}
+            action={
+              <Button
+                color="inherit"
+                size="small"
+                onClick={handleEdit}
+                startIcon={<Iconify icon="solar:pen-bold" />}
+              >
+                Edit
+              </Button>
+            }
+          >
+            Pharmacy configuration is active and ready to serve customers!
+          </Alert>
+        )}
+
         {renderPharmacyHeader}
+        {renderDashboardStats}
         {renderCategories}
 
         {editMode && (
           <>
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
-              <Typography variant="h4">
-                {currentConfig ? 'Edit Pharmacy Configuration' : 'Setup Pharmacy Configuration'}
-              </Typography>
+              <Box>
+                <Typography variant="h4">
+                  {config.config ? 'Edit Pharmacy Configuration' : 'Setup Pharmacy Configuration'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {config.config ? 'Update your pharmacy information and settings' : 'Configure your pharmacy details to get started'}
+                </Typography>
+              </Box>
               <Button
                 color="inherit"
                 variant="outlined"
@@ -796,13 +991,14 @@ export function OverviewPharmacyView() {
             </Stack>
 
             <PharmacyConfigForm
-              currentConfig={currentConfig}
+              currentConfig={config.config}
               onSuccess={handleFormSuccess}
+              loading={config.loading}
             />
           </>
         )}
 
-        {!editMode && !currentConfig && (
+        {!editMode && !config.config && (
           <Card>
             <CardContent>
               <Box
@@ -814,24 +1010,56 @@ export function OverviewPharmacyView() {
                   flexDirection: 'column',
                 }}
               >
-                <Iconify icon="solar:hospital-bold" width={64} sx={{ color: 'text.disabled', mb: 3 }} />
-                <Typography variant="h5" color="text.disabled" gutterBottom>
-                  No Pharmacy Configuration Found
-                </Typography>
-                <Typography variant="body2" color="text.disabled" sx={{ mb: 3 }}>
-                  Set up your pharmacy configuration to get started
-                </Typography>
-                <Button
-                  variant="contained"
-                  startIcon={<Iconify icon="mingcute:add-line" />}
-                  onClick={handleCreateNew}
+                <Box
+                  sx={{
+                    width: 120,
+                    height: 120,
+                    borderRadius: 3,
+                    bgcolor: 'primary.lighter',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mb: 3,
+                  }}
                 >
-                  Setup Pharmacy
-                </Button>
+                  <Iconify icon="solar:hospital-bold" width={64} sx={{ color: 'primary.main' }} />
+                </Box>
+                <Typography variant="h4" gutterBottom>
+                  Welcome to Pharmacy Management
+                </Typography>
+                <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 480 }}>
+                  Set up your pharmacy configuration to start managing your inventory,
+                  categories, and provide excellent healthcare services to your customers.
+                </Typography>
+                <Stack direction="row" spacing={2}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    startIcon={<Iconify icon="mingcute:add-line" />}
+                    onClick={handleCreateNew}
+                  >
+                    Setup Pharmacy
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    startIcon={<Iconify icon="solar:document-text-bold" />}
+                    onClick={() => toast.info('Documentation coming soon!')}
+                  >
+                    View Guide
+                  </Button>
+                </Stack>
               </Box>
             </CardContent>
           </Card>
         )}
+
+        {/* Category Detail Dialog */}
+        <CategoryDetailDialog
+          category={selectedCategory}
+          open={categoryDetailOpen}
+          onClose={handleCategoryDetailClose}
+        />
       </Container>
     </DashboardContent>
   );
