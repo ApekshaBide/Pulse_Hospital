@@ -7,10 +7,10 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
 import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import CardContent from '@mui/material/CardContent';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
@@ -376,7 +376,7 @@ function CartItem({ item, onQuantityChange, onRemove, updatingQuantity, removing
 }
 
 CartItem.propTypes = {
-  item: PropTypes.object,
+  item: PropTypes.shape({ id: PropTypes.string, name: PropTypes.string, quantity: PropTypes.number, price: PropTypes.number }),
   onQuantityChange: PropTypes.func,
   onRemove: PropTypes.func,
   updatingQuantity: PropTypes.bool,

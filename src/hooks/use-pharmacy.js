@@ -1,7 +1,7 @@
 // src/hooks/use-pharmacy.js
 // Custom React Hooks for Pharmacy Management
+import { useEffect, useCallback, useMemo, useState } from 'react';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
 import { pharmacyApi } from '../utils/pharmacy';
 
 // Generic API hook for loading states and error handling
@@ -159,7 +159,7 @@ export const usePharmacyCategories = (params = {}) => {
     fetchCategories().catch(() => {
       // Error is already handled in fetchCategories
     });
-  }, [filters.is_featured, filters.search, filters.ordering]);
+  }, [fetchCategories]);
 
   // Computed values
   const featuredCategories = useMemo(() =>
@@ -275,7 +275,7 @@ export const usePharmacyProducts = (params = {}) => {
     fetchProducts().catch(() => {
       // Error is already handled in fetchProducts
     });
-  }, [filters, pagination.page, pagination.limit]);
+  },  [fetchProducts]);
 
   // Computed values
   const products = useMemo(() => productsData.results || [], [productsData]);
@@ -440,13 +440,11 @@ export const usePharmacyCart = () => {
 
   // Helper functions
   const getItemQuantity = useCallback((productId) => {
-    const item = cart?.items?.find(item => item.product.id === parseInt(productId));
-    return item ? item.quantity : 0;
+    const matchedItem = cart?.items?.find(cartItem => cartItem.product.id === parseInt(productId, 10));
+    return matchedItem ? matchedItem.quantity : 0;
   }, [cart]);
 
-  const isInCart = useCallback((productId) => {
-    return cart?.items?.some(item => item.product.id === parseInt(productId)) || false;
-  }, [cart]);
+ const isInCart = useCallback((productId) => cart?.items?.some(item => item.product.id === parseInt(productId, 10)) || false, [cart]);
 
   return {
     cart,
@@ -491,7 +489,8 @@ export const useCategoryDetails = (categoryId) => {
       setError(null);
       const details = await pharmacyApi.categories.getById(id);
       setCategoryDetails(details);
-      return details;
+// eslint-disable-next-line consistent-return
+return details;
     } catch (err) {
       setError(err.message || 'Failed to fetch category details');
       throw err;
@@ -545,8 +544,8 @@ export const usePharmacySearch = () => {
         products: productsResponse.results,
         categories: categoriesResponse
       });
-
-      return { products: productsResponse.results, categories: categoriesResponse };
+// eslint-disable-next-line consistent-return
+return { products: productsResponse.results, categories: categoriesResponse };
     } catch (err) {
       setSearchError(err.message || 'Search failed');
       throw err;

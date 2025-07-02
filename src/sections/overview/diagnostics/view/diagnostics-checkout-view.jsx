@@ -1,6 +1,5 @@
 // src/sections/overview/diagnostics/view/diagnostics-checkout-view.jsx
-
-import { useState,useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -9,8 +8,8 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
@@ -93,24 +92,26 @@ export function DiagnosticsCheckoutView() {
   });
 
   // Calculate cart totals
-  const cartTotals = cart?.items ? calculateCartTotal(cart.items) : {
+const cartTotals = useMemo(() => (
+  cart?.items ? calculateCartTotal(cart.items) : {
     subtotal: 0,
     homeCollectionCharge: 0,
     totalSavings: 0,
     total: 0
-  };
+  }
+), [cart]);
 
   // Load time slots when date changes
   useEffect(() => {
     if (formData.preferred_slot.date) {
       loadTimeSlots();
     }
-  }, [formData.preferred_slot.date]);
+  },[formData.preferred_slot.date, loadTimeSlots])
 
   // Load payment methods on component mount
   useEffect(() => {
     loadPaymentMethods();
-  }, []);
+  }, [loadPaymentMethods]);
 
   const loadTimeSlots = useCallback(async () => {
     try {
@@ -189,7 +190,7 @@ export function DiagnosticsCheckoutView() {
       setActiveStep(prev => prev + 1);
       setErrors({});
     }
-  }, [activeStep, formData]);
+  }, [activeStep, formData, handleBookingSubmit]);
 
   const handleBack = useCallback(() => {
     setActiveStep(prev => prev - 1);

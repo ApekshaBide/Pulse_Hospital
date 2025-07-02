@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { DiagnosticsPackageView } from 'src/sections/overview/diagnostics/view';
+import DiagnosticsPackageView from 'src/sections/overview/diagnostics/view/diagnostics-package-view';
 
 // ----------------------------------------------------------------------
 

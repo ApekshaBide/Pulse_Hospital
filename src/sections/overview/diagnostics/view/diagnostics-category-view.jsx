@@ -6,33 +6,33 @@ import { useState, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
+import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import CircularProgress from '@mui/material/CircularProgress';
+import Fab from '@mui/material/Fab';
 import Alert from '@mui/material/Alert';
+import Badge from '@mui/material/Badge';
+import Skeleton from '@mui/material/Skeleton';
+import Snackbar from '@mui/material/Snackbar';
+import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import Skeleton from '@mui/material/Skeleton';
-import Fab from '@mui/material/Fab';
-import Badge from '@mui/material/Badge';
-import Snackbar from '@mui/material/Snackbar';
+import InputAdornment from '@mui/material/InputAdornment';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useCategoryDetail, useDiagnosticsActions, useCart } from 'src/hooks/use-diagnostics';
+import { useCart, useCategoryDetail, useDiagnosticsActions } from 'src/hooks/use-diagnostics';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Iconify } from 'src/components/iconify';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
 import { CartDrawer } from 'src/components/cart-drawer/cart-drawer';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 // ----------------------------------------------------------------------
 

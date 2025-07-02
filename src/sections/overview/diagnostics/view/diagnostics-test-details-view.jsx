@@ -6,31 +6,29 @@ import { useState, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Skeleton from '@mui/material/Skeleton';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
-import Alert from '@mui/material/Alert';
 import CardContent from '@mui/material/CardContent';
-import Divider from '@mui/material/Divider';
-import Paper from '@mui/material/Paper';
-import Skeleton from '@mui/material/Skeleton';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useTestDetail, useDiagnosticsActions, useCart } from 'src/hooks/use-diagnostics';
+import { useCart, useTestDetail, useDiagnosticsActions } from 'src/hooks/use-diagnostics';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
+import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { Label } from 'src/components/label';
-
 // ----------------------------------------------------------------------
-
 export function DiagnosticsTestDetailView() {
   const router = useRouter();
   const { testId } = useParams();

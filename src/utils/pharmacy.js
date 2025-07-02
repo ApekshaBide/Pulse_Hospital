@@ -224,7 +224,7 @@ const simulateDelay = (ms = 1000) => new Promise(resolve => setTimeout(resolve, 
 // API Request helper
 const apiRequest = async (endpoint, options = {}) => {
   try {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${process.env.REACT_APP_API_BASE_URL}${endpoint}`;
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -301,7 +301,7 @@ export const pharmacyApi = {
 
     async getById(id) {
       await simulateDelay(500);
-      const category = mockApiResponses.pharmacy_categories.find(cat => cat.id === parseInt(id));
+      const category = mockApiResponses.pharmacy_categories.find(cat => cat.id === parseInt(id, 10));
       if (!category) throw new Error('Category not found');
 
       return {
@@ -380,8 +380,8 @@ export const pharmacyApi = {
       }
 
       // Pagination
-      const page = parseInt(params.page) || 1;
-      const limit = parseInt(params.limit) || 10;
+      const page = parseInt(params.page, 10) || 1;
+      const limit = parseInt(params.limit,10) || 10;
       const start = (page - 1) * limit;
       const end = start + limit;
 
@@ -436,11 +436,11 @@ export const pharmacyApi = {
 
     async addItem(productId, quantity = 1) {
       await simulateDelay(800);
-      const product = mockApiResponses.pharmacy_products.results.find(p => p.id === parseInt(productId));
+      const product = mockApiResponses.pharmacy_products.results.find(p => p.id === parseInt(productId, 10));
       if (!product) throw new Error('Product not found');
 
       const existingCart = mockApiResponses.pharmacy_cart;
-      const existingItem = existingCart.items.find(item => item.product.id === parseInt(productId));
+      const existingItem = existingCart.items.find(item => item.product.id === parseInt(productId, 10));
 
       if (existingItem) {
         existingItem.quantity += quantity;
@@ -476,7 +476,7 @@ export const pharmacyApi = {
     async updateQuantity(productId, quantity) {
       await simulateDelay(600);
       const existingCart = mockApiResponses.pharmacy_cart;
-      const item = existingCart.items.find(item => item.product.id === parseInt(productId));
+      const item = existingCart.items.find(cartItem => cartItem.product.id === parseInt(productId, 10));
 
       if (!item) throw new Error('Item not found in cart');
 
@@ -490,9 +490,9 @@ export const pharmacyApi = {
       item.savings_amount = (parseFloat(item.total_original_price) - parseFloat(item.total_price)).toFixed(2);
 
       // Recalculate totals
-      existingCart.total_items = existingCart.items.reduce((sum, item) => sum + item.quantity, 0);
-      existingCart.subtotal = existingCart.items.reduce((sum, item) => sum + parseFloat(item.total_price), 0).toFixed(2);
-      existingCart.total_savings = existingCart.items.reduce((sum, item) => sum + parseFloat(item.savings_amount), 0).toFixed(2);
+      existingCart.total_items = existingCart.items.reduce((sum, cartItem) => sum + cartItem.quantity, 0);
+     existingCart.subtotal = existingCart.items.reduce((sum, cartItem) => sum + parseFloat(cartItem.total_price), 0).toFixed(2);
+      existingCart.total_savings = existingCart.items.reduce((sum, cartItem) => sum + parseFloat(cartItem.savings_amount), 0).toFixed(2);
       existingCart.total_amount = existingCart.subtotal;
 
       return existingCart;
@@ -501,7 +501,7 @@ export const pharmacyApi = {
     async removeItem(productId) {
       await simulateDelay(500);
       const existingCart = mockApiResponses.pharmacy_cart;
-      existingCart.items = existingCart.items.filter(item => item.product.id !== parseInt(productId));
+      existingCart.items = existingCart.items.filter(item => item.product.id !== parseInt(productId, 10));
 
       // Recalculate totals
       existingCart.total_items = existingCart.items.reduce((sum, item) => sum + item.quantity, 0);

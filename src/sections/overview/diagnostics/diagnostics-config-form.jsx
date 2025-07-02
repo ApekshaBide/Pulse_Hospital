@@ -1,9 +1,9 @@
 // src/sections/overview/diagnostics/diagnostics-config-form.jsx
 
-import React, { useState, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import React, { useMemo, useState, useCallback } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';

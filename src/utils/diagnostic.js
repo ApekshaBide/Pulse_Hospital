@@ -1,6 +1,6 @@
 // src/utils/diagnostic.js
 
-import { endpoints } from 'src/utils/axios';
+// import { endpoints } from 'src/utils/axios';
 
 // Mock data for diagnostics configuration
 export const mockDiagnosticsConfig = {
@@ -670,7 +670,7 @@ export const fetchTestsByCategory = async (categoryId, params = {}) => {
     }
 
     const { search, min_price, max_price, sample_type, is_popular } = params;
-    let tests = categoryDetail.tests;
+    let { tests } = categoryDetail;
 
     // Apply filters
     if (search) {

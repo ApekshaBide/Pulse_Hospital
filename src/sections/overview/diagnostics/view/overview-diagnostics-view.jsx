@@ -22,8 +22,8 @@ import { DiagnosticsConfigForm } from '../diagnostics-config-form';
 import { DiagnosticsSearchSection } from '../diagnostics-search-section';
 import { DiagnosticsHealthPackages } from '../diagnostics-health-package';
 import {
+   DiagnosticsAllCategories,
    DiagnosticsFeaturedCategories,
-   DiagnosticsAllCategories
  } from '../dignostics-categories-sections';
  import {
    DiagnosticsEmptyState,

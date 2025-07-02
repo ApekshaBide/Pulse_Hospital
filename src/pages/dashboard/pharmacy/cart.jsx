@@ -1,6 +1,7 @@
 // src/pages/dashboard/pharmacy/cart.jsx
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
 import { useRouter } from 'src/routes/hooks';
 import {
   Container,
@@ -27,7 +28,7 @@ import {
 } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { usePharmacy } from 'src/hooks/use-pharmacy';
+import usePharmacy from 'src/hooks/use-pharmacy';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { paths } from 'src/routes/paths';
@@ -51,16 +52,16 @@ export default function PharmacyCartPage() {
   useEffect(() => {
     fetchCart();
     loadCartSummary();
-  }, [fetchCart]);
+  }, [fetchCart, loadCartSummary]);
 
-  const loadCartSummary = async () => {
-    try {
-      const summary = await fetchCartSummary();
-      setCartSummary(summary);
-    } catch (err) {
-      console.error('Error loading cart summary:', err);
-    }
-  };
+const loadCartSummary = useCallback(async () => {
+  try {
+    const summary = await fetchCartSummary();
+    setCartSummary(summary);
+  } catch (err) {
+    console.error('Error loading cart summary:', err);
+  }
+}, [fetchCartSummary]);
 
   const handleQuantityChange = async (productId, newQuantity) => {
     if (newQuantity <= 0) {
@@ -71,8 +72,8 @@ export default function PharmacyCartPage() {
     try {
       await updateCartQuantity(productId, newQuantity);
       await loadCartSummary();
-    } catch (error) {
-      console.error('Error updating quantity:', error);
+    } catch (err) {
+      console.error('Error updating quantity:', err);
     }
   };
 
@@ -80,8 +81,8 @@ export default function PharmacyCartPage() {
     try {
       await removeFromCart(productId);
       await loadCartSummary();
-    } catch (error) {
-      console.error('Error removing item:', error);
+    } catch (err) {
+      console.error('Error removing item:', err);
     }
   };
 
@@ -89,8 +90,8 @@ export default function PharmacyCartPage() {
     try {
       await clearCart();
       await loadCartSummary();
-    } catch (error) {
-      console.error('Error clearing cart:', error);
+    } catch (err) {
+      console.error('Error clearing cart:', err);
     }
   };
 
@@ -283,7 +284,7 @@ export default function PharmacyCartPage() {
           {cartSummary?.prescription_required && (
             <Alert severity="warning" sx={{ mt: 2 }}>
               <Typography variant="body2">
-                This order contains prescription items. You'll need to upload a valid prescription before checkout.
+                This order contains prescription items. You&apos;d to upload a valid prescription before checkout.
               </Typography>
             </Alert>
           )}

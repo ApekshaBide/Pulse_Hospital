@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { usePharmacy } from 'src/hooks/use-pharmacy';
+import usePharmacy from 'src/hooks/use-pharmacy';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { paths } from 'src/routes/paths';
@@ -72,11 +72,9 @@ export default function PharmacyCategoryPage() {
     try {
       await addToCart(productId, 1);
       console.log('Product added to cart successfully');
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-    }
+    } catch (err) {
+      console.error('Error adding to cart:', err);
   };
-
   const renderCategoryHeader = categoryDetails && (
     <Paper
       sx={{
@@ -422,4 +420,5 @@ export default function PharmacyCategoryPage() {
       </DashboardContent>
     </>
   );
+}
 }

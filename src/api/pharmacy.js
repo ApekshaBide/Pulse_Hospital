@@ -381,7 +381,7 @@ export const categoryAPI = {
   // Update category
   updateCategory: async (id, data) => {
     const apiCall = () => pharmacyAPI.put(`/categories/${id}/`, data);
-    const mockResponse = { ...data, id: parseInt(id), updated_at: new Date().toISOString() };
+    const mockResponse = { ...data, id: parseInt(id, 10), updated_at: new Date().toISOString() };
     return apiCallWithFallback(apiCall, mockResponse, 1000);
   },
 
@@ -412,7 +412,7 @@ export const subcategoryAPI = {
   // Get subcategory by ID
   getSubcategoryById: async (id) => {
     const apiCall = () => pharmacyAPI.get(`/subcategories/${id}/`);
-    const mockSubcategory = mockPharmacyData.pharmacy_category_detail.subcategories.find(sub => sub.id === parseInt(id));
+    const mockSubcategory = mockPharmacyData.pharmacy_category_detail.subcategories.find(sub => sub.id === parseInt(id, 10));
     return apiCallWithFallback(apiCall, mockSubcategory, 500);
   },
 };
@@ -431,7 +431,7 @@ export const productAPI = {
   // Get product by ID
   getProductById: async (id) => {
     const apiCall = () => pharmacyAPI.get(`/products/${id}/`);
-    const mockProduct = mockPharmacyData.pharmacy_products.results.find(prod => prod.id === parseInt(id));
+    const mockProduct = mockPharmacyData.pharmacy_products.results.find(prod => prod.id === parseInt(id, 10));
     return apiCallWithFallback(apiCall, mockProduct || mockPharmacyData.pharmacy_product_detail, 600);
   },
 
@@ -440,7 +440,7 @@ export const productAPI = {
     const apiCall = () => pharmacyAPI.get(`/products/category/${categoryId}/`, { params });
     const mockProducts = {
       ...mockPharmacyData.pharmacy_products,
-      results: mockPharmacyData.pharmacy_products.results.filter(prod => prod.category_id === parseInt(categoryId))
+      results: mockPharmacyData.pharmacy_products.results.filter(prod => prod.category_id === parseInt(categoryId,10))
     };
     return apiCallWithFallback(apiCall, mockProducts, 800);
   },
@@ -450,7 +450,7 @@ export const productAPI = {
     const apiCall = () => pharmacyAPI.get(`/products/subcategory/${subcategoryId}/`, { params });
     const mockProducts = {
       ...mockPharmacyData.pharmacy_products,
-      results: mockPharmacyData.pharmacy_products.results.filter(prod => prod.subcategory_id === parseInt(subcategoryId))
+      results: mockPharmacyData.pharmacy_products.results.filter(prod => prod.subcategory_id === parseInt(subcategoryId,10))
     };
     return apiCallWithFallback(apiCall, mockProducts, 800);
   },
@@ -592,7 +592,7 @@ export const pharmacyConfigAPI = {
     const apiCall = () => pharmacyAPI.put(`/config/${id}/`, data);
     const mockResponse = {
       ...data,
-      id: parseInt(id),
+      id: parseInt(id, 10),
       updated_at: new Date().toISOString()
     };
     return apiCallWithFallback(apiCall, mockResponse, 1200);
@@ -626,18 +626,15 @@ export const withLoading = async (apiCall, setLoading) => {
 
 // Helper function for error handling
 export const handleAPIError = (error, showToast = true) => {
-  let message = 'Something went wrong!';
+ let message;
 
-  if (error.response?.data?.message) {
-    message = error.response.data.message;
-  } else if (error.response?.data?.error) {
-    message = error.response.data.error;
-  } else if (error.response?.data?.detail) {
-    message = error.response.data.detail;
-  } else if (error.message) {
-    message = error.message;
-  }
-
+if (error.response?.data?.message) {
+  ({ message } = error.response.data);
+} else if (error.response?.data?.error) {
+  ({ error: message } = error.response.data);
+} else if (error.response?.data?.detail) {
+  ({ detail: message } = error.response.data);
+}
   console.error('Pharmacy API Error:', message);
 
   if (showToast) {
@@ -680,11 +677,11 @@ export const filterProducts = (products, filters = {}) => {
   let filtered = [...products];
 
   if (filters.category) {
-    filtered = filtered.filter(product => product.category_id === parseInt(filters.category));
+    filtered = filtered.filter(product => product.category_id === parseInt(filters.category, 10));
   }
 
   if (filters.subcategory) {
-    filtered = filtered.filter(product => product.subcategory_id === parseInt(filters.subcategory));
+    filtered = filtered.filter(product => product.subcategory_id === parseInt(filters.subcategory,10));
   }
 
   if (filters.brand) {

@@ -1,4 +1,4 @@
-// src/pages/dashboard/pharmacy/categories.jsx
+// 📄 src/pages/dashboard/pharmacy/configuration.jsx
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import {
@@ -324,7 +324,7 @@ export default function PharmacyCategoriesPage() {
               <Button
                 variant="outlined"
                 startIcon={<Iconify icon="eva:shopping-bag-outline" />}
-                onClick={() => window.location.href = '/dashboard/pharmacy/products'}
+                onClick={() => { window.location.href = '/dashboard/pharmacy/products'; }}
               >
                 Browse All Products
               </Button>

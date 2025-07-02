@@ -5,19 +5,19 @@ import { useMemo } from 'react';
 
 import {
   fetchDiagnosticsConfig,
-  createDiagnosticsConfig,
-  updateDiagnosticsConfig,
   fetchCategoryDetail,
-  fetchDiagnosticsCategories,
-  fetchTestDetail,
-  fetchPopularTests,
-  fetchTestsByCategory,
-  fetchHealthPackages,
   fetchCart,
-  addToCart,
-  updateCartQuantity,
-  removeFromCart,
-  clearCart,
+   addToCart,
+   clearCart,
+    removeFromCart,
+     fetchTestDetail,
+     fetchPopularTests,
+     updateCartQuantity,
+  createDiagnosticsConfig,
+   fetchHealthPackages,
+  updateDiagnosticsConfig,
+     fetchTestsByCategory,
+     fetchDiagnosticsCategories,
 } from 'src/utils/diagnostic';
 
 // ----------------------------------------------------------------------
@@ -60,7 +60,7 @@ export function useDiagnosticsCategories() {
     }
   );
 
-  const categories = data?.categories || [];
+const categories = useMemo(() => data?.categories || [], [data]);
 
   const memoizedValue = useMemo(() => {
     const featuredCategories = categories.filter(category => category.is_featured);
@@ -74,7 +74,7 @@ export function useDiagnosticsCategories() {
       categoriesEmpty: !isLoading && categories.length === 0,
       refreshCategories: mutate,
     };
-  }, [data, error, isLoading, mutate, categories]);
+  }, [error, isLoading, mutate, categories]);
 
   return memoizedValue;
 }
@@ -238,7 +238,7 @@ export function useCart() {
 
   const memoizedValue = useMemo(
     () => ({
-      cart: cart,
+      cart,
       cartItems: cart?.items || [],
       cartTotalItems: cart?.total_items || 0,
       cartSubtotal: cart?.subtotal || "0.00",
@@ -249,7 +249,7 @@ export function useCart() {
       cartEmpty: !isLoading && (!cart || !cart.items || cart.items.length === 0),
       refreshCart: mutate,
     }),
-    [data, error, isLoading, mutate, cart]
+    [error, isLoading, mutate, cart]
   );
 
   return memoizedValue;
@@ -261,66 +261,40 @@ export function useDiagnosticsActions() {
   const { refreshConfig } = useDiagnosticsConfig();
   const { refreshCart } = useCart();
 
-  const createConfig = async (configData) => {
-    try {
-      const newConfig = await createDiagnosticsConfig(configData);
-      refreshConfig(); // Refresh the config data
-      return newConfig;
-    } catch (error) {
-      throw error;
-    }
-  };
+const createConfig = async (configData) => {
+  const newConfig = await createDiagnosticsConfig(configData);
+  refreshConfig();
+  return newConfig;
+};
 
   const updateConfig = async (configId, configData) => {
-    try {
-      const updatedConfig = await updateDiagnosticsConfig(configId, configData);
-      refreshConfig(); // Refresh the config data
-      return updatedConfig;
-    } catch (error) {
-      throw error;
-    }
-  };
+  const updatedConfig = await updateDiagnosticsConfig(configId, configData);
+  refreshConfig();
+  return updatedConfig;
+};
 
   // Cart actions
-  const addItemToCart = async (cartId, testId, quantity = 1) => {
-    try {
-      const updatedCart = await addToCart(cartId, testId, quantity);
-      refreshCart(); // Refresh cart data
-      return updatedCart;
-    } catch (error) {
-      throw error;
-    }
-  };
+ const addItemToCart = async (cartId, testId, quantity = 1) => {
+  const updatedCart = await addToCart(cartId, testId, quantity);
+  refreshCart();
+  return updatedCart;
+};
+const updateItemQuantity = async (cartId, testId, quantity) => {
+  const updatedCart = await updateCartQuantity(cartId, testId, quantity);
+  refreshCart();
+  return updatedCart;
+};
+const removeItemFromCart = async (cartId, testId) => {
+  const updatedCart = await removeFromCart(cartId, testId);
+  refreshCart();
+  return updatedCart;
+};
 
-  const updateItemQuantity = async (cartId, testId, quantity) => {
-    try {
-      const updatedCart = await updateCartQuantity(cartId, testId, quantity);
-      refreshCart(); // Refresh cart data
-      return updatedCart;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const removeItemFromCart = async (cartId, testId) => {
-    try {
-      const updatedCart = await removeFromCart(cartId, testId);
-      refreshCart(); // Refresh cart data
-      return updatedCart;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const clearAllCart = async (cartId) => {
-    try {
-      const updatedCart = await clearCart(cartId);
-      refreshCart(); // Refresh cart data
-      return updatedCart;
-    } catch (error) {
-      throw error;
-    }
-  };
+const clearAllCart = async (cartId) => {
+  const updatedCart = await clearCart(cartId);
+  refreshCart();
+  return updatedCart;
+};
 
   return {
     createConfig,

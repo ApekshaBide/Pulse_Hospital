@@ -20,7 +20,7 @@ const DiagnosticsTestPage = lazy(() => import('src/pages/dashboard/diagnostics/t
 const DiagnosticsPackagePage = lazy(() => import('src/pages/dashboard/diagnostics/package'));
 const DiagnosticsCartPage = lazy(() => import('src/pages/dashboard/diagnostics/cart'));
 
-const PharmacyOverviewPage = lazy(() => import('src/pages/dashboard/pharmacy/index.js'));
+const PharmacyOverviewPage = lazy(() => import('src/pages/dashboard/pharmacy'));
 const PharmacyCategoriesPage = lazy(() => import('src/pages/dashboard/pharmacy/categories'));
 const PharmacyCategoryPage = lazy(() => import('src/pages/dashboard/pharmacy/category'));
 const PharmacyProductsPage = lazy(() => import('src/pages/dashboard/pharmacy/products'));

@@ -8,7 +8,6 @@ import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import CardMedia from '@mui/material/CardMedia';
 import TextField from '@mui/material/TextField';
@@ -35,14 +34,14 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import {
   pharmacyApi,
-  usePharmacyProducts,
   usePharmacyCart,
   formatPrice,
-  calculateDiscount
 } from 'src/utils/pharmacy';
+import { calculateDiscount } from 'src/utils/pharmacy';
+import { usePharmacyProducts } from 'src/hooks/use-pharmacy';
 
 // ----------------------------------------------------------------------
-
+export const calculateDiscount = (price, discountPercent) => price - (price * discountPercent) / 100;
 // Product Card Component
 function ProductCard({ product, onAddToCart, cartLoading }) {
   const [quantity, setQuantity] = useState(1);
@@ -331,7 +330,7 @@ export function PharmacyProductsView() {
     ordering: searchParams.get('ordering') || 'name',
   });
 
-  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')) || 1);
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page'), 10) || 1);
 
   // Custom hooks
   const {
@@ -376,9 +375,7 @@ export function PharmacyProductsView() {
     setSearchParams(params);
   }, [updatePage, searchParams, setSearchParams]);
 
-  const handleAddToCart = useCallback(async (productId, quantity) => {
-    return await addToCart(productId, quantity);
-  }, [addToCart]);
+ const handleAddToCart = useCallback(async (productId, quantity) => addToCart(productId, quantity), [addToCart]);
 
   const handleClearFilters = () => {
     const clearedFilters = {
@@ -398,16 +395,16 @@ export function PharmacyProductsView() {
   };
 
   // Computed values
-  const hasActiveFilters = useMemo(() => {
-    return filters.search ||
-           filters.brand ||
-           filters.subcategory ||
-           filters.min_price ||
-           filters.max_price ||
-           filters.is_bestseller ||
-           filters.is_prescription_required ||
-           filters.ordering !== 'name';
-  }, [filters]);
+const hasActiveFilters = useMemo(() =>
+  filters.search ||
+  filters.brand ||
+  filters.subcategory ||
+  filters.min_price ||
+  filters.max_price ||
+  filters.is_bestseller ||
+  filters.is_prescription_required ||
+  filters.ordering !== 'name',
+[filters]);
 
   const totalPages = Math.ceil((pagination?.count || 0) / 12);
 

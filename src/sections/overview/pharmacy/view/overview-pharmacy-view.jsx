@@ -1,8 +1,8 @@
 // src/sections/overview/pharmacy/view/overview-pharmacy-view.jsx
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
-import { useMemo, useState, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -21,9 +21,9 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import CardContent from '@mui/material/CardContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import Alert from '@mui/material/Alert';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@mui/material/CircularProgress';
-import Alert from '@mui/material/Alert';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -32,15 +32,9 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
-import { Scrollbar } from 'src/components/scrollbar';
 import { Form, Field} from 'src/components/hook-form';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-
-// Import our custom hooks
 import { usePharmacyManager, useCategoryDetails } from 'src/hooks/use-pharmacy';
-
-// ----------------------------------------------------------------------
-
 // Schema for Pharmacy Configuration
 const PharmacyConfigSchema = zod.object({
   name: zod.string().min(1, { message: 'Pharmacy name is required!' }),

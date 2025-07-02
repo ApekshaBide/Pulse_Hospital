@@ -105,7 +105,6 @@ export const paths = {
     blank: `${ROOTS.DASHBOARD}/blank`,
     kanban: `${ROOTS.DASHBOARD}/kanban`,
     appointment: `${ROOTS.DASHBOARD}/appointment`,
-    pharmacy: `${ROOTS.DASHBOARD}/pharmacy`,
     homevisit: `${ROOTS.DASHBOARD}/homevisit`,
     emergency: `${ROOTS.DASHBOARD}/emergency`,
     covid: `${ROOTS.DASHBOARD}/covid`,
