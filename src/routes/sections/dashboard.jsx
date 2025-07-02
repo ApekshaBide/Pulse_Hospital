@@ -1,3 +1,4 @@
+// src/routes/sections/dashboard.jsx
 import { lazy, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 
@@ -20,17 +21,24 @@ const DiagnosticsTestPage = lazy(() => import('src/pages/dashboard/diagnostics/t
 const DiagnosticsPackagePage = lazy(() => import('src/pages/dashboard/diagnostics/package'));
 const DiagnosticsCartPage = lazy(() => import('src/pages/dashboard/diagnostics/cart'));
 
+// Updated Pharmacy imports - using the new views
 const PharmacyOverviewPage = lazy(() => import('src/pages/dashboard/pharmacy'));
 const PharmacyCategoriesPage = lazy(() => import('src/pages/dashboard/pharmacy/categories'));
 const PharmacyCategoryPage = lazy(() => import('src/pages/dashboard/pharmacy/category'));
 const PharmacyProductsPage = lazy(() => import('src/pages/dashboard/pharmacy/products'));
 const PharmacyProductPage = lazy(() => import('src/pages/dashboard/pharmacy/products'));
-const PharmacyCartPage = lazy(() => import('src/pages/dashboard/pharmacy/cart'));
+// const PharmacyCartPage = lazy(() => import('src/pages/dashboard/pharmacy/cart'));
+// const PharmacyCheckoutPage = lazy(() => import('src/pages/dashboard/pharmacy/checkout'));
 const PharmacyOrdersPage = lazy(() => import('src/pages/dashboard/pharmacy/orders'));
 const PharmacyOrderPage = lazy(() => import('src/pages/dashboard/pharmacy/order'));
 const PharmacyInventoryPage = lazy(() => import('src/pages/dashboard/pharmacy/inventory'));
 const PharmacyConfigurationPage = lazy(() => import('src/pages/dashboard/pharmacy/configuration'));
 const PharmacyReportsPage = lazy(() => import('src/pages/dashboard/pharmacy/reports'));
+
+// New Pharmacy View Components - Direct imports
+const PharmacyProductsView = lazy(() => import('src/sections/overview/pharmacy/view/pharmacy-products-view'));
+const PharmacyCartView = lazy(() => import('src/sections/overview/pharmacy/view/pharmacy-cart-view'));
+const PharmacyCheckoutView = lazy(() => import('src/sections/overview/pharmacy/view/pharmacy-checkout-view'));
 
 // Overview
 const IndexPage = lazy(() => import('src/pages/dashboard'));
@@ -135,9 +143,13 @@ export const dashboardRoutes = [
           { path: 'overview', element: <PharmacyOverviewPage /> },
           { path: 'categories', element: <PharmacyCategoriesPage /> },
           { path: 'category/:categoryId', element: <PharmacyCategoryPage /> },
+          // New pharmacy product listing route
+          { path: 'category/:categoryId/products', element: <PharmacyProductsView /> },
           { path: 'products', element: <PharmacyProductsPage /> },
           { path: 'product/:productId', element: <PharmacyProductPage /> },
-          { path: 'cart', element: <PharmacyCartPage /> },
+          // New pharmacy cart and checkout routes
+          // { path: 'cart', element: <PharmacyCartView /> },
+          // { path: 'checkout', element: <PharmacyCheckoutView /> },
           { path: 'orders', element: <PharmacyOrdersPage /> },
           { path: 'order/:orderId', element: <PharmacyOrderPage /> },
           { path: 'inventory', element: <PharmacyInventoryPage /> },
